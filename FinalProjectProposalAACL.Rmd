@@ -5,6 +5,7 @@ date: "Date goes Here!"
 output: pdf_document
 ---
 
+
 ## Final Project Proposal
 
 Final projects can be completed in groups of up to four students. The proposals can also be collaborative, but each student should turn in one. 
@@ -175,3 +176,15 @@ knitr::kable(
 
 
 ```
+
+
+#Libraries
+library(RCurl)
+library(readr)
+
+#Our Work Here
+
+url <- getURL("https://raw.githubusercontent.com/avaelisa/soc10finalproject-alex-christine-ava-luci/refs/heads/main/soc10-dataset")
+
+# download incarceration data (from github)
+data <- read_csv(url, skip = 1)
