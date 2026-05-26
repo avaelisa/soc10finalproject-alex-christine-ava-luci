@@ -310,6 +310,7 @@ library(tigris)
 
 census_api_key("857ead205d4b6101ae723a246e9b6f95b1b827d4")
 
+#get map of states in the US
 states <- get_acs(
   geography = "state",
   variables = "B19013_001",
@@ -318,14 +319,13 @@ states <- get_acs(
 
 
 class(data)
-
 View(data)
 
-#view
+#view map of states in US
 ggplot(states)+
 geom_sf()
 
-#combine data
+#combine data: USA map + incarceration rate
 states_incar <- states %>%
   left_join(data, by = c("NAME" = "Location"))
   
@@ -333,6 +333,7 @@ View(states_incar)
 
 library(viridis)
 
+#plot combined data - incarceration rate in each state
 ggplot(states_incar)+
   geom_sf(aes(fill = `Total`))+
   scale_fill_viridis(option = "magma", direction = -1)
