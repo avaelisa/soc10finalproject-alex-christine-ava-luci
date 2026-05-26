@@ -1,0 +1,343 @@
+---
+title: "Final Project Proposal"
+author: "Your Name Here! (group members here, optional)"
+date: "Date goes Here!"
+output: pdf_document
+---
+
+
+## Final Project Proposal
+
+Final projects can be completed in groups of up to four students. The proposals can also be collaborative, but each student should turn in one. 
+
+
+Proposals should answer the following questions:
+
+1. What is your research question? Why does it matter? How does it relate to society?
+
+2. What data will you use to answer the question? Do you have access to these data?
+
+* The class list that we made together in Problem Set 2 is available below. 
+* Ideally, you are able to show access to at least a portion of the data that you will need.
+* Beyond the APIs and other data sources we have used in class, there are some great options on [Kaggle](https://www.kaggle.com/).  
+* Consider conducting a survey! [All Our Ideas](https://all-our-ideas.citizens.is/domain/1) is one tool that could be useful for building such a survey. 
+* See an example project on wildfires from a similar class [here](https://bookdown.org/shrishp/bookdown-demo/index.html).
+
+
+3. What methods will you use to answer your research question?
+
+* Most projects will use some of the methods that we haven't yet covered. This is great, but show that you have an idea of where you are heading!
+
+4. What kind of product will you create? How do you want others to read or engage with your project?
+
+* In most cases, projects will be R Markdown documents or Jupyter Notebooks, both of which can be published as websites. 
+
+
+The class list of ideas for data sources is on the course site. 
+
+```{r q3, echo = FALSE, message = FALSE, eval = FALSE}
+
+library(dplyr)
+library(magrittr)
+
+# write code for question 3 here!
+resources_df <- data.frame("resource name" = c("All Our Ideas"), 
+                       "link" = c("https://allourideas.org/"),
+                       "custom_ready" = c("custom made"),
+                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking."))
+
+resources_df2 <- data.frame("resource name" = c("All Our Ideas", "US Census Data"), 
+                       "link" = c("https://allourideas.org/", "https://data.census.gov/"),
+                       "custom_ready" = c("custom made"),
+                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking."))
+
+
+resources_df3 <- data.frame("resource name" = "Medicare's priciest drugs.",
+                                  "link" = c("https://www.cms.gov/data-research/statistics-trends-and-reports/cms-drug-spending"),
+                                  "custom_ready" = c("custom made"),
+                                  "description" = c("CMS has released several information products that provide greater transparency on spending for drugs in the Medicare and Medicaid programs."))
+
+
+resources_df4 <- data.frame("resource name" = c("All Our Ideas","ABC News Polls"), 
+                       "link" = c("https://allourideas.org/","https://www.langerresearch.com/category/abc-news-polls/"),
+                       "custom_ready" = c("custom made","ready made"),
+                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.","ABC News Poll is a publically available archive produced by Langer Research Associates. These surveys capture public opinion polling for the ABC News Television Network from 2010-2025. Surveys cover a variety of topics from sentiments on immigration, political figures, tariffs, and more."))
+
+
+resources_df5 <- data.frame("resource name" = c("All Our Ideas", "General Social Survey 2024", "IPUMS USA"), 
+                           "link" = c("https://allourideas.org/", "https://gss.norc.org/get-the-data.html", "https://usa.ipums.org/usa/"),
+                       "custom_ready" = c("custom made", "ready made", "ready made"),
+                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.", 
+                                         "The GSS has been a reliable source of data to help researchers, students, and journalists monitor and explain trends in American behaviors, demographics, and opinions. You'll find the complete GSS data set on this site, and can access the GSS Data Explorer to explore, analyze, extract, and share custom sets of GSS data. The 2024 GSS Cross-section continues the multi-mode design and several other new features. We encourage users review the documents below before they perform any analysis.", "The data is the U.S. CENSUS DATA FOR SOCIAL, ECONOMIC, AND HEALTH RESEARCH. IPUMS USA collects, preserves and harmonizes U.S. census microdata and provides easy access to this data with enhanced documentation. Data includes decennial censuses from 1790 to 2010 and American Community Surveys (ACS) from 2000 to the present."))
+
+
+resources_df6 <- data.frame("resource name" = c("All Our Ideas", "Education and Exployment"), 
+                       "link" = c("https://allourideas.org/", "https://www.bls.gov/emp/tables/unemployment-earnings-education.htm"),
+                       "custom_ready" = c("custom made", "not custom made"), 
+                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.", "Education and Employment is a data set created by the National Bureau of Labor Statistics outlining the unemployment and median earnings per educational level. As is expected, those with advanced degrees (PhD, Masters, etc have the lowest unemployment rate and highest median salary, while those with little educational experience report the opposite. This data is useful in establishing a potential relationship between education and exployment outcomes like wage/salary."))
+
+
+resources_df7 <- data.frame("resource name" = c("Consumer Expenditure Survey"), 
+                           "link" = c("https://www.bls.gov/cex/"), 
+                           "custom_ready" = c("custom made"), 
+                           "description" = c("Consumer Expenditure Surveys provide data on expenditures, income, and demographic characteristics of consumers in the United States. It is the only Federal household survey to provide data on the full range of consumers' expenditures and incomes. It can be used for poverty and consumer research."))
+
+
+resources_df8 <- data.frame("resource name" = c("Roper Center"),
+                          "link" = c("https://ropercenter.cornell.edu/"),
+                          "custom_ready" = c("custom made"),
+                          "description" = c("The Roper Center for Public Opinion Research uses survey and polling data to gatehr information about the public's uncensored view of different policies, discussions and broad topics. It is possible to register as a data provider with the Roper Center, meaning that the center also accepts data from a shared collective."))
+
+
+resources_df9 <- data.frame("resource name" = c("Hate Crime Reported in the US"),
+"link" = c("https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/explorer/crime/hate-crime"),
+"custom_ready" = c("custom made"),
+"description" = c("Hate Crime Reported in the US is data on 
+the number of United States offenses, United States incidents, and percent of hate crime 
+in comparison to the total US population. Different bias categories are also included. 
+The number of hate crime rates over time that you can look at can span from 3 months to 
+10 years."))
+
+ resources_df10 <- data.frame("resource name" = c("Pew Research Center"),
+                              "link" = c("https://www.pewresearch.org/"),
+                              "custom_ready" = "ready made",
+                              "description" = c("Pew Research Center is a nonprofit research organization with a dedicated staff of researchers and experts in a variety of fields. Pew primarily develops their datasets through surveys; the subject of their surveys are largely based on current event issues, the questions people are asking, and gaps in reliable data. This tool is largely perceived as a reliable non-partisan resource for social science - given their brand, they aim to uphold rigorous research standards.")) 
+  
+resources_df11 <- data.frame("resource name" = c("All Our Ideas", "Pew Research Center"), 
+                       "link" = c("https://allourideas.org/", "https://www.pewresearch.org/datasets/"),
+                       "custom_ready" = c("custom made", "previously collected"),
+                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.", "Pew Research Center collects data on a wide range of topics from healthcare, AI, politics, and social opinions and is collected primarily via survey data. These are heavily large-scale datsets ranging from the entire United States to International surveys. This is a relevant resource to use for data sources as this data source is free, features a wide variety of social science topics, and is relevant for understanding human behavior and experiances from a social context."))
+
+resources_df12 <- data.frame("resource name" = c("Education and Income (Census)"),
+"link" = c("https://www.census.gov/library/stories/2025/09/education-and-income.html"),
+"custom_ready" = c("not custom"),
+
+"description" = c("Education and Income is a U.S Census Bureau story that shows how income varies by educaitonal level. It demonstrates that higher levels of education are associated with higher earnings and differences in income outcomes across the population.")
+)
+
+resources_df13 <- data.frame("resource name" = c("All Our Ideas", "Google Trends"), 
+                       "link" = c("https://allourideas.org/", "https://trends.google.com/"),
+                       "custom_ready" = c("custom made", "ready made"),
+                       "description" = c(
+                         "All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.",
+                         "Google Trends provides data on how often specific search terms are entered into Google over time, allowing researchers to analyze patterns in public interest and behavior. The platform aggregates search data and normalizes it so that trends can be compared across different time periods and geographic regions. Researchers can use this tool to track changes in attention, identify spikes in interest around events, and compare the popularity of multiple topics. This is especially useful for studying real-time social trends, cultural shifts, and public reactions to news or events, although it only captures behavior from people who use Google and may not fully represent the entire population."))
+
+
+resources_df14 <- data.frame("resource name" = c("Wikipedia Pageviews"),
+                  "link" = c("https://pageviews.wmcloud.org/"),
+                  "custom_ready" = c("ready made"),
+                  "description" = c("Wikipedia Pageviews has a number that allow the public to view and compare statistics for wikipedia articles. These statistics include the number of page visits, the number of edits made, the number of page visits to an article in different languages, among others. This data may be used to analyse data similar to google trends, but with of an emphasis on summery articles rather than general google searches."))
+
+resources_df15 <- data.frame(
+  "resource name" = c("Google Trends"), 
+  "link" = c("https://trends.google.com/trends/"),
+  "custom_ready" = c("readymade"),
+  "description" = c(
+    "Google Trends provides data on search behavior over time, allowing researchers to analyze public interest and trends."
+  )
+)
+
+resources_df_all <- bind_rows(resources_df,
+                              resources_df2,
+                              resources_df3,
+                              resources_df4,
+                              resources_df5,
+                              resources_df6,
+                              resources_df7,
+                              resources_df8,
+                              resources_df9,
+                              resources_df10,
+                              resources_df11,
+                              resources_df12,
+                              resources_df13,
+                              resources_df14,
+                              resources_df15)
+
+# remove duplicates
+resources_df_all %<>%
+  distinct()
+
+
+
+
+library(kableExtra)
+
+knitr::kable(
+  head(resources_df_all, 50), longtable = TRUE, booktabs = TRUE,
+ # caption = 'Collaborative Data Resource List'
+) %>%
+  kable_styling(font_size = 8) %>%
+  scroll_box(width = "100%", height = "400px") %>%
+  column_spec(1, width = "10cm") %>%
+  column_spec(2, width = "10cm") %>%
+  column_spec(3, width = "10cm") %>%
+  column_spec(4, width = "40cm")
+
+
+
+
+
+```
+
+
+
+#Libraries
+library(RCurl)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+
+#Our Work Here
+
+url <- getURL("https://raw.githubusercontent.com/avaelisa/soc10finalproject-alex-christine-ava-luci/refs/heads/main/soc10-dataset")
+
+# download incarceration data (from github)
+data <- read_csv(url)
+
+#View(data)
+
+#Mutuate to fix state names and remove U.S. total, Federal, and All States
+data %<>%
+  mutate(Location=case_match(Location,
+                             "Alaska/b"~"Alaska",
+                             "Connecticut/b"~"Connecticut",
+                             "Delaware/b"~"Delaware",
+                             "Hawaii/b"~"Hawaii",
+                             "Maryland/c"~"Maryland",
+                             "Missouri/d"~"Missouri",
+                             "Oklahoma/c"~"Oklahoma",
+                             "Rhode Island/b"~"Rhode Island",
+                             "Vermont/b"~"Vermont",
+                             .default=Location)) %>%
+  filter(!Location %in% c("U.S. total", "Federal", "All States"))
+
+#Bar Chart 1: Total Incarceration by State
+#Goal: Compare incarceration rates for all states
+#coord_flip will make bar chart horizontal. This will make data easier to analyze 
+#reorder in ggplot will rank bars from smallest to biggest so it is easier to see trends and which states have highest vs lowest incarceration rates
+total_graph <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+
+  geom_bar(position = "dodge", stat = "identity", 
+           aes(fill = Location))+
+           labs(x = "", y = "Total")+
+             coord_flip() 
+
+#See visualization 
+total_graph 
+
+
+#Bar Chart 2: Total Incarceration Rate with States Divided by Region 
+
+#The states were divided into regions through case_match.
+region_data <- data %>% 
+  mutate(Region=case_match(Location,
+                             #Northeast
+                             c("Maine", "Vermont", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "Pennsylvania", "New Jersey") ~ "Northeast",
+                             #Midwest
+                             c("North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio") ~ "Midwest",
+                             #West
+                             c("Washington", "Oregon", "California", "Nevada", "Idaho", "Wyoming", "Montana", "Colorado", "Utah", "Arizona", "New Mexico") ~ "West",
+                             #South
+                             c("Texas", "Oklahoma", "Arkansas", "Louisiana", "Mississippi", "Kentucky", "Tennessee", "Alabama", "Georgia", "West Virginia", "Florida", "South Carolina", "North Carolina", "Maryland", "Delaware") ~ "South",
+                             .default = "Other")) %>%
+  group_by(Region) %>% mutate(sum = sum(Total, na.rm = TRUE))
+
+
+#View(region_data)
+
+  
+region_total_graph <- 
+  ggplot(region_data, aes(x = reorder(Region, Total), y = sum)) +
+  geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
+  labs(x = "Region", y = "Total")+
+  theme_linedraw()+
+  coord_flip()
+
+region_total_graph
+
+#State by Gender
+
+total_graph_gender <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+
+  geom_bar(position = "stack", stat = "identity", 
+           aes(fill = Location))+
+           labs(x = "", y = "Total")+
+             coord_flip() 
+             
+#test
+
+data2 <- data %>%
+  pivot_longer(cols = c(Male, Female),
+               names_to = "Gender",
+               values_to = "Value")
+               
+ggplot(data2, aes(x = Location, y = Value))+
+  geom_bar(position = "stack", stat = "identity",
+           aes(fill = Gender))+
+  theme_linedraw()+
+  labs(x = "State Separated by Gender")+
+  coord_flip() 
+
+#Region by Gender 
+#Make it long 
+
+# pivot longer
+region_data2 <- region_data %>%
+  pivot_longer(cols = c(Male, Female),
+               names_to = "Gender",
+               values_to = "Value")
+               
+# now try with long data
+#View(region_data2)
+    
+# first, we can plot a histogram of disaster years
+gender_by_region <- ggplot(region_data2, aes(x = Region, y = Value))+
+  geom_bar(position = "stack", stat = "identity",
+           aes(fill = Gender))+
+  theme_linedraw()+
+  labs(x = "Region Separated by Gender")+
+  coord_flip() 
+   
+   
+gender_by_region
+
+
+#spatial 
+
+library(sf)
+library(tidycensus)
+library(tigris)
+
+census_api_key("857ead205d4b6101ae723a246e9b6f95b1b827d4")
+
+states <- get_acs(
+  geography = "state",
+  variables = "B19013_001",
+  geometry = TRUE,
+  year = 2020)
+
+
+class(data)
+
+View(data)
+
+#view
+ggplot(states)+
+geom_sf()
+
+#combine data
+states_incar <- states %>%
+  left_join(data, by = c("NAME" = "Location"))
+  
+View(states_incar)
+
+library(viridis)
+
+ggplot(states_incar)+
+  geom_sf(aes(fill = `Total`))+
+  scale_fill_viridis(option = "magma", direction = -1)
+
+#line width? https://r-graph-gallery.com/package/ggpattern.html can make outside of barchart the differentiator
+
+
+
