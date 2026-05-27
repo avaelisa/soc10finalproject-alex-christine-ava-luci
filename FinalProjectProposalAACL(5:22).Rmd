@@ -7,33 +7,16 @@ output: pdf_document
 
 
 ## Final Project Proposal
-
-Final projects can be completed in groups of up to four students. The proposals can also be collaborative, but each student should turn in one. 
-
-
 Proposals should answer the following questions:
 
 1. What is your research question? Why does it matter? How does it relate to society?
 
 2. What data will you use to answer the question? Do you have access to these data?
 
-* The class list that we made together in Problem Set 2 is available below. 
-* Ideally, you are able to show access to at least a portion of the data that you will need.
-* Beyond the APIs and other data sources we have used in class, there are some great options on [Kaggle](https://www.kaggle.com/).  
-* Consider conducting a survey! [All Our Ideas](https://all-our-ideas.citizens.is/domain/1) is one tool that could be useful for building such a survey. 
-* See an example project on wildfires from a similar class [here](https://bookdown.org/shrishp/bookdown-demo/index.html).
-
-
 3. What methods will you use to answer your research question?
-
-* Most projects will use some of the methods that we haven't yet covered. This is great, but show that you have an idea of where you are heading!
 
 4. What kind of product will you create? How do you want others to read or engage with your project?
 
-* In most cases, projects will be R Markdown documents or Jupyter Notebooks, both of which can be published as websites. 
-
-
-The class list of ideas for data sources is on the course site. 
 
 ```{r q3, echo = FALSE, message = FALSE, eval = FALSE}
 
@@ -181,22 +164,37 @@ knitr::kable(
 
 
 
+
+Download all necessary libraries
+```{r libraries, echo = T, message=F, warning=F}
 #Libraries
 library(RCurl)
 library(readr)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(sf)
+library(tidycensus)
+library(tigris)
+
+```
 
 
-#Our Work Here
+Download data 
+```{r data, echo = T, message=F, warning=F}
 
 url <- getURL("https://raw.githubusercontent.com/avaelisa/soc10finalproject-alex-christine-ava-luci/refs/heads/main/soc10-dataset")
 
 # download incarceration data (from github)
 data <- read_csv(url)
 
-#View(data)
+View(data)
+
+```
+
+Data processing part 1
+
+```{r data processing 1, echo = T, message=F, warning=F}
 
 #Mutuate to fix state names and remove U.S. total, Federal, and All States
 data %<>%
@@ -213,23 +211,35 @@ data %<>%
                              .default=Location)) %>%
   filter(!Location %in% c("U.S. total", "Federal", "All States"))
 
-#Bar Chart 1: Total Incarceration by State
-#Goal: Compare incarceration rates for all states
-#coord_flip will make bar chart horizontal. This will make data easier to analyze 
-#reorder in ggplot will rank bars from smallest to biggest so it is easier to see trends and which states have highest vs lowest incarceration rates
-state_total_graph <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+
+```
+
+
+Bar Chart 1: Total Population Incarcerated by State
+Goal: Compare incarceration rates for all states
+
+Using coord_flip to make bar chart horizontal. Reorder in ggplot will rank bars from smallest to biggest so it is easier to see trends and which states have highest vs lowest incarceration rates. This will make data easier to analyze. 
+
+```{r figure 1, echo = T, message=F, warning=F}
+
+state_total_graph <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+ #reorder 
   geom_bar(position = "dodge", stat = "identity", 
            aes(fill = Location))+
-           labs(x = "", y = "Total")+
+           labs(x = "", y = "Total", title = "Total Population Incarcerated by State")+
              coord_flip() 
+
 
 #See visualization 
 state_total_graph 
 
+```
 
-#Bar Chart 2: Total Incarceration Rate with States Divided by Region 
 
-#The states were divided into regions through case_match.
+Bar Chart 2: Total Incarceration Rate with States Divided by Region 
+
+The states were divided into regions through case_match.
+
+```{r figure 2, echo = T, message=F, warning=F}
+
 region_data <- data %>% 
   mutate(Region=case_match(Location,
                              #Northeast
@@ -243,19 +253,24 @@ region_data <- data %>%
                              .default = "Other")) %>%
   group_by(Region) %>% mutate(sum = sum(Total, na.rm = TRUE))
 
+#Plot
 region_total_graph <- 
   ggplot(region_data, aes(x = reorder(Region, Total), y = sum)) +
   geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
-  labs(x = "Region", y = "Total")+
+  labs(x = "Region", y = "Total", title = "Total Population Incarcerated by Region")+
   theme_linedraw()+
   coord_flip()
 
+#Print Plot
 region_total_graph
 
-#View(region_data)
+```
 
-#Bar Chart 3: Total Incarceration Rate with States Divided by State by Gender
-# pivot longer
+Bar Chart 3: Total Incarceration Rate with States Divided by State by Gender
+
+```{r figure 3, echo = T, message=F, warning=F}
+
+#pivot longer
 state_data <- data %>%
   pivot_longer(cols = c(Male, Female),
                names_to = "Gender",
@@ -266,37 +281,42 @@ state_total_stacked <- ggplot(state_data, aes(x = Location, y = Value))+
   geom_bar(position = "stack", stat = "identity",
            aes(fill = Gender))+
   theme_linedraw()+
-  labs(x = "State Separated by Gender")+
+  labs(x = "State Separated by Gender", title = "Total Population Incarcerated by State and Gender")+
   coord_flip() 
   
+#print plot 
 state_total_stacked
 
-#Bar Chart 4: Total Incarceration Rate with States Divided by Region by Gender
-#set up data frame
+```
 
-# pivot longer
+
+Bar Chart 4: Total Incarceration Rate with States Divided by Region by Gender
+
+```{r figure 4, echo = T, message=F, warning= F}
+
+#pivot longer
 region_data2 <- region_data %>%
   pivot_longer(cols = c(Male, Female),
                names_to = "Gender",
                values_to = "Value")
               
     
-#plot
+#plot 
 gender_by_region <- ggplot(region_data2, aes(x = Region, y = Value))+
   geom_bar(position = "stack", stat = "identity",
            aes(fill = Gender))+
   theme_linedraw()+
-  labs(x = "Region Separated by Gender")+
+  labs(x = "Region Separated by Gender",  title = "Total Population Incarcerated by Region and Gender")+
   coord_flip() 
-   
+ 
+#print plot  
 gender_by_region
 
+```
 
-#Spatial Graph 1: Total # of women incarcerated per 100,000 people
+Set up spatial data 
 
-library(sf)
-library(tidycensus)
-library(tigris)
+```{r figure 4, echo = T, message=F, warning=F}
 
 #census API
 census_api_key("857ead205d4b6101ae723a246e9b6f95b1b827d4")
@@ -311,8 +331,15 @@ states <- get_acs(
 #combine data: USA map + incarceration rate
 states_incar <- states %>%
   left_join(data, by = c("NAME" = "Location"))
-  
-#add female per one hundered thousand people
+
+```
+
+
+Spatial Graph 1: Total # of women incarcerated per 100,000 people
+
+```{r figure 5, echo = T, message=F, warning=F}
+
+#add female per one hundered thousand people to the spatial data
 states_incar_fpc <- states_incar %>%
   mutate("Female Incarceration Ratio Per 100,000" = Female/estimate*100000)
   
@@ -321,10 +348,15 @@ ggplot(states_incar_fpc)+
   geom_sf(aes(fill = `Female Incarceration Ratio Per 100,000`))+
   scale_fill_viridis(option = "magma", direction = -1)+
   labs(title = "Female Incarceration Ratio Per 100,000 in Each State")
-  
-#Spatial Graph 2: Ratio of total # of female incarcerated to male incarcerated per State
 
-#add female per male to dataset 
+```
+
+
+Spatial Graph 2: Ratio of total # of female incarcerated to male incarcerated per State
+
+```{r}
+
+#add female per male to spatial data 
 states_incar_fpm <- states_incar %>%
   mutate("Female to Male Incarceration Ratio" = Female/Male)
 
@@ -333,8 +365,11 @@ ggplot(states_incar_fpm)+
   geom_sf(aes(fill = `Female to Male Incarceration Ratio`))+
   scale_fill_viridis(option = "magma", direction = -1)+
   labs(title = "Total Female to Total Male Incarceration Ratio in Each State")
-  
 
+```
+
+  
+#Ttest and seperate by policy states 
 
 
 
