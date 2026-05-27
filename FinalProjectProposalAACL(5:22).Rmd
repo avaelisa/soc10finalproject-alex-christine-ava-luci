@@ -217,14 +217,14 @@ data %<>%
 #Goal: Compare incarceration rates for all states
 #coord_flip will make bar chart horizontal. This will make data easier to analyze 
 #reorder in ggplot will rank bars from smallest to biggest so it is easier to see trends and which states have highest vs lowest incarceration rates
-total_graph <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+
+state_total_graph <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+
   geom_bar(position = "dodge", stat = "identity", 
            aes(fill = Location))+
            labs(x = "", y = "Total")+
              coord_flip() 
 
 #See visualization 
-total_graph 
+state_total_graph 
 
 
 #Bar Chart 2: Total Incarceration Rate with States Divided by Region 
@@ -243,10 +243,6 @@ region_data <- data %>%
                              .default = "Other")) %>%
   group_by(Region) %>% mutate(sum = sum(Total, na.rm = TRUE))
 
-
-#View(region_data)
-
-  
 region_total_graph <- 
   ggplot(region_data, aes(x = reorder(Region, Total), y = sum)) +
   geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
@@ -256,41 +252,36 @@ region_total_graph <-
 
 region_total_graph
 
-#State by Gender
+#View(region_data)
 
-total_graph_gender <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+
-  geom_bar(position = "stack", stat = "identity", 
-           aes(fill = Location))+
-           labs(x = "", y = "Total")+
-             coord_flip() 
-             
-#test
-
-data2 <- data %>%
+#Bar Chart 3: Total Incarceration Rate with States Divided by State by Gender
+# pivot longer
+state_data <- data %>%
   pivot_longer(cols = c(Male, Female),
                names_to = "Gender",
                values_to = "Value")
-               
-ggplot(data2, aes(x = Location, y = Value))+
+ 
+#plot              
+state_total_stacked <- ggplot(state_data, aes(x = Location, y = Value))+
   geom_bar(position = "stack", stat = "identity",
            aes(fill = Gender))+
   theme_linedraw()+
   labs(x = "State Separated by Gender")+
   coord_flip() 
+  
+state_total_stacked
 
-#Region by Gender 
-#Make it long 
+#Bar Chart 4: Total Incarceration Rate with States Divided by Region by Gender
+#set up data frame
 
 # pivot longer
 region_data2 <- region_data %>%
   pivot_longer(cols = c(Male, Female),
                names_to = "Gender",
                values_to = "Value")
-               
-# now try with long data
-#View(region_data2)
+              
     
-# first, we can plot a histogram of disaster years
+#plot
 gender_by_region <- ggplot(region_data2, aes(x = Region, y = Value))+
   geom_bar(position = "stack", stat = "identity",
            aes(fill = Gender))+
@@ -298,47 +289,52 @@ gender_by_region <- ggplot(region_data2, aes(x = Region, y = Value))+
   labs(x = "Region Separated by Gender")+
   coord_flip() 
    
-   
 gender_by_region
 
 
-#spatial 
+#Spatial Graph 1: Total # of women incarcerated per 100,000 people
 
 library(sf)
 library(tidycensus)
 library(tigris)
 
+#census API
 census_api_key("857ead205d4b6101ae723a246e9b6f95b1b827d4")
 
-#get map of states in the US
+#get map of states in the US and pull population data
 states <- get_acs(
   geography = "state",
-  variables = "B19013_001",
+  variables = "B01003_001",
   geometry = TRUE,
-  year = 2020)
-
-
-class(data)
-View(data)
-
-#view map of states in US
-ggplot(states)+
-geom_sf()
+  year = 2023)
 
 #combine data: USA map + incarceration rate
 states_incar <- states %>%
   left_join(data, by = c("NAME" = "Location"))
   
-View(states_incar)
+#add female per one hundered thousand people
+states_incar_fpc <- states_incar %>%
+  mutate("Female Incarceration Ratio Per 100,000" = Female/estimate*100000)
+  
+#plot combined data - Female Incarceration Ratio Per 100,000 in Each State
+ggplot(states_incar_fpc)+
+  geom_sf(aes(fill = `Female Incarceration Ratio Per 100,000`))+
+  scale_fill_viridis(option = "magma", direction = -1)+
+  labs(title = "Female Incarceration Ratio Per 100,000 in Each State")
+  
+#Spatial Graph 2: Ratio of total # of female incarcerated to male incarcerated per State
 
-library(viridis)
+#add female per male to dataset 
+states_incar_fpm <- states_incar %>%
+  mutate("Female to Male Incarceration Ratio" = Female/Male)
 
-#plot combined data - incarceration rate in each state
-ggplot(states_incar)+
-  geom_sf(aes(fill = `Total`))+
-  scale_fill_viridis(option = "magma", direction = -1)
+#plot combined data - Ratio of Female to Male
+ggplot(states_incar_fpm)+
+  geom_sf(aes(fill = `Female to Male Incarceration Ratio`))+
+  scale_fill_viridis(option = "magma", direction = -1)+
+  labs(title = "Total Female to Total Male Incarceration Ratio in Each State")
+  
 
-#line width? https://r-graph-gallery.com/package/ggpattern.html can make outside of barchart the differentiator
 
 
 
