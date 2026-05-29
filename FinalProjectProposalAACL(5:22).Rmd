@@ -176,6 +176,7 @@ library(ggplot2)
 library(sf)
 library(tidycensus)
 library(tigris)
+library(viridis)
 
 ```
 
@@ -188,7 +189,7 @@ url <- getURL("https://raw.githubusercontent.com/avaelisa/soc10finalproject-alex
 # download incarceration data (from github)
 data <- read_csv(url)
 
-View(data)
+#View(data)
 
 ```
 
@@ -196,7 +197,7 @@ Data processing part 1
 
 ```{r data processing 1, echo = T, message=F, warning=F}
 
-#Mutuate to fix state names and remove U.S. total, Federal, and All States
+#Mutate to fix state names and remove U.S. total, Federal, and All States
 data %<>%
   mutate(Location=case_match(Location,
                              "Alaska/b"~"Alaska",
@@ -243,15 +244,17 @@ The states were divided into regions through case_match.
 region_data <- data %>% 
   mutate(Region=case_match(Location,
                              #Northeast
-                             c("Maine", "Vermont", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "Pennsylvania", "New Jersey") ~ "Northeast",
+                             c("Maine", "Vermont", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "Pennsylvania", "New Jersey", "Virginia") ~ "Northeast",
                              #Midwest
-                             c("North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio") ~ "Midwest",
+                             c("North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio", "Indiana") ~ "Midwest",
                              #West
                              c("Washington", "Oregon", "California", "Nevada", "Idaho", "Wyoming", "Montana", "Colorado", "Utah", "Arizona", "New Mexico") ~ "West",
                              #South
                              c("Texas", "Oklahoma", "Arkansas", "Louisiana", "Mississippi", "Kentucky", "Tennessee", "Alabama", "Georgia", "West Virginia", "Florida", "South Carolina", "North Carolina", "Maryland", "Delaware") ~ "South",
                              .default = "Other")) %>%
   group_by(Region) %>% mutate(sum = sum(Total, na.rm = TRUE))
+
+#View(region_data)
 
 #Plot
 region_total_graph <- 
@@ -316,7 +319,7 @@ gender_by_region
 
 Set up spatial data 
 
-```{r figure 4, echo = T, message=F, warning=F}
+```{r set up spatial data, echo = T, message=F, warning=F}
 
 #census API
 census_api_key("857ead205d4b6101ae723a246e9b6f95b1b827d4")
@@ -354,7 +357,7 @@ ggplot(states_incar_fpc)+
 
 Spatial Graph 2: Ratio of total # of female incarcerated to male incarcerated per State
 
-```{r}
+```{r figure 6, echo = T, message=F, warning=F}
 
 #add female per male to spatial data 
 states_incar_fpm <- states_incar %>%
@@ -372,4 +375,50 @@ ggplot(states_incar_fpm)+
 #Ttest and seperate by policy states 
 
 
+Spatial Graph 3: Highlighting states with specific policies on spatial graph of total # of female incarcerated to per capita arrests
+
+```{r figure 6, echo = T, message=F, warning=F}
+
+#highlight specific states 
+
+strict_prositution_states <- states_incar_fpc %>% 
+  filter(NAME %in% c("South Carolina", "Oklahoma", "Texas", "Utah", "Pennsylvaia", "Nevada", "Kentucky", "West Virginia", "Vermont", "Louisiana", "Idaho", "Indiana", "Illinois"))
+
+#Female Incarceration Ratio Per 100,000 in Each State Highlighting those with Strict Laws in White
+ggplot(states_incar_fpc)+
+  geom_sf(aes(fill = `Female Incarceration Ratio Per 100,000`))+
+  scale_fill_viridis(option = "magma", direction = -1)+
+  labs(title = "Female Incarceration Ratio Per 100,000 in Each State", 
+       subtitle = "States with Stricter Stances on Prosition are Highlighted in White Borders")+
+  geom_sf(data = strict_prositution_states, 
+          fill = NA, 
+          color = "white",
+          size = 5)
+
+
+```
+
+  
+T-Test: Highlighting states with specific policies on spatial graph of total # of female incarcerated to male incarcerated per state
+
+p-value is typically less than 0.05 (or 5%), the result is considered statistically significant. 
+
+```{r t-test, echo = T, message=F, warning=F}
+
+#add row for those with stricter take on prostitution vs not
+strictness_states_incar_fpc <- states_incar_fpc %>% 
+  mutate(Strictness=case_match(NAME,
+                             #Strict
+                             c("South Carolina", "Oklahoma", "Texas", "Utah", "Pennsylvaia", "Nevada", "Kentucky", "West Virginia", "Vermont", "Louisiana", "Idaho", "Indiana", "Illinois") ~ "Strict",
+                             c("Maine", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "New Jersey", "North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio", "Washington", "Oregon", "California", "Wyoming", "Montana", "Colorado", "Arizona", "New Mexico", "Arkansas", "Mississippi", "Tennessee", "Alabama", "Georgia", "Florida", "North Carolina", "Maryland", "Delaware", "Pennsylvania", "Alaska", "Hawaii", "Virginia") ~ "Not Strict", 
+         .default = "Other")) %>%
+  group_by(Strictness) %>% mutate(sum = sum(Total, na.rm = TRUE))
+
+#View(strictness_states_incar_fpc)
+
+#ttest 
+t.test(`Female Incarceration Ratio Per 100,000` ~ Strictness, data = strictness_states_incar_fpc)
+
+
+```
 
