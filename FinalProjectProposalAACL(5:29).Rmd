@@ -20,153 +20,6 @@ Proposals should answer the following questions:
 4. What kind of product will you create? How do you want others to read or engage with your project?
 
 
-```{r q3, echo = FALSE, message = FALSE, eval = FALSE}
-
-library(dplyr)
-library(magrittr)
-
-# write code for question 3 here!
-resources_df <- data.frame("resource name" = c("All Our Ideas"), 
-                       "link" = c("https://allourideas.org/"),
-                       "custom_ready" = c("custom made"),
-                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking."))
-
-resources_df2 <- data.frame("resource name" = c("All Our Ideas", "US Census Data"), 
-                       "link" = c("https://allourideas.org/", "https://data.census.gov/"),
-                       "custom_ready" = c("custom made"),
-                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking."))
-
-
-resources_df3 <- data.frame("resource name" = "Medicare's priciest drugs.",
-                                  "link" = c("https://www.cms.gov/data-research/statistics-trends-and-reports/cms-drug-spending"),
-                                  "custom_ready" = c("custom made"),
-                                  "description" = c("CMS has released several information products that provide greater transparency on spending for drugs in the Medicare and Medicaid programs."))
-
-
-resources_df4 <- data.frame("resource name" = c("All Our Ideas","ABC News Polls"), 
-                       "link" = c("https://allourideas.org/","https://www.langerresearch.com/category/abc-news-polls/"),
-                       "custom_ready" = c("custom made","ready made"),
-                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.","ABC News Poll is a publically available archive produced by Langer Research Associates. These surveys capture public opinion polling for the ABC News Television Network from 2010-2025. Surveys cover a variety of topics from sentiments on immigration, political figures, tariffs, and more."))
-
-
-resources_df5 <- data.frame("resource name" = c("All Our Ideas", "General Social Survey 2024", "IPUMS USA"), 
-                           "link" = c("https://allourideas.org/", "https://gss.norc.org/get-the-data.html", "https://usa.ipums.org/usa/"),
-                       "custom_ready" = c("custom made", "ready made", "ready made"),
-                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.", 
-                                         "The GSS has been a reliable source of data to help researchers, students, and journalists monitor and explain trends in American behaviors, demographics, and opinions. You'll find the complete GSS data set on this site, and can access the GSS Data Explorer to explore, analyze, extract, and share custom sets of GSS data. The 2024 GSS Cross-section continues the multi-mode design and several other new features. We encourage users review the documents below before they perform any analysis.", "The data is the U.S. CENSUS DATA FOR SOCIAL, ECONOMIC, AND HEALTH RESEARCH. IPUMS USA collects, preserves and harmonizes U.S. census microdata and provides easy access to this data with enhanced documentation. Data includes decennial censuses from 1790 to 2010 and American Community Surveys (ACS) from 2000 to the present."))
-
-
-resources_df6 <- data.frame("resource name" = c("All Our Ideas", "Education and Exployment"), 
-                       "link" = c("https://allourideas.org/", "https://www.bls.gov/emp/tables/unemployment-earnings-education.htm"),
-                       "custom_ready" = c("custom made", "not custom made"), 
-                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.", "Education and Employment is a data set created by the National Bureau of Labor Statistics outlining the unemployment and median earnings per educational level. As is expected, those with advanced degrees (PhD, Masters, etc have the lowest unemployment rate and highest median salary, while those with little educational experience report the opposite. This data is useful in establishing a potential relationship between education and exployment outcomes like wage/salary."))
-
-
-resources_df7 <- data.frame("resource name" = c("Consumer Expenditure Survey"), 
-                           "link" = c("https://www.bls.gov/cex/"), 
-                           "custom_ready" = c("custom made"), 
-                           "description" = c("Consumer Expenditure Surveys provide data on expenditures, income, and demographic characteristics of consumers in the United States. It is the only Federal household survey to provide data on the full range of consumers' expenditures and incomes. It can be used for poverty and consumer research."))
-
-
-resources_df8 <- data.frame("resource name" = c("Roper Center"),
-                          "link" = c("https://ropercenter.cornell.edu/"),
-                          "custom_ready" = c("custom made"),
-                          "description" = c("The Roper Center for Public Opinion Research uses survey and polling data to gatehr information about the public's uncensored view of different policies, discussions and broad topics. It is possible to register as a data provider with the Roper Center, meaning that the center also accepts data from a shared collective."))
-
-
-resources_df9 <- data.frame("resource name" = c("Hate Crime Reported in the US"),
-"link" = c("https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/explorer/crime/hate-crime"),
-"custom_ready" = c("custom made"),
-"description" = c("Hate Crime Reported in the US is data on 
-the number of United States offenses, United States incidents, and percent of hate crime 
-in comparison to the total US population. Different bias categories are also included. 
-The number of hate crime rates over time that you can look at can span from 3 months to 
-10 years."))
-
- resources_df10 <- data.frame("resource name" = c("Pew Research Center"),
-                              "link" = c("https://www.pewresearch.org/"),
-                              "custom_ready" = "ready made",
-                              "description" = c("Pew Research Center is a nonprofit research organization with a dedicated staff of researchers and experts in a variety of fields. Pew primarily develops their datasets through surveys; the subject of their surveys are largely based on current event issues, the questions people are asking, and gaps in reliable data. This tool is largely perceived as a reliable non-partisan resource for social science - given their brand, they aim to uphold rigorous research standards.")) 
-  
-resources_df11 <- data.frame("resource name" = c("All Our Ideas", "Pew Research Center"), 
-                       "link" = c("https://allourideas.org/", "https://www.pewresearch.org/datasets/"),
-                       "custom_ready" = c("custom made", "previously collected"),
-                       "description" = c("All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.", "Pew Research Center collects data on a wide range of topics from healthcare, AI, politics, and social opinions and is collected primarily via survey data. These are heavily large-scale datsets ranging from the entire United States to International surveys. This is a relevant resource to use for data sources as this data source is free, features a wide variety of social science topics, and is relevant for understanding human behavior and experiances from a social context."))
-
-resources_df12 <- data.frame("resource name" = c("Education and Income (Census)"),
-"link" = c("https://www.census.gov/library/stories/2025/09/education-and-income.html"),
-"custom_ready" = c("not custom"),
-
-"description" = c("Education and Income is a U.S Census Bureau story that shows how income varies by educaitonal level. It demonstrates that higher levels of education are associated with higher earnings and differences in income outcomes across the population.")
-)
-
-resources_df13 <- data.frame("resource name" = c("All Our Ideas", "Google Trends"), 
-                       "link" = c("https://allourideas.org/", "https://trends.google.com/"),
-                       "custom_ready" = c("custom made", "ready made"),
-                       "description" = c(
-                         "All Our Ideas is a wiki survey that asks participants to compare two items (e.g. which is better, Stanford or Cal?) at a time. The respondents' answers are then aggregated so that each answer has a win percentage, and the surveyor can rank a large number of items. Respondents can also add their own ideas (answers) to the survey. This is useful for doing surveys on large or ambiguous questions, where the researcher might not know the best answers and it may be hard to compare all at once, but where there is a definitive underlying ranking.",
-                         "Google Trends provides data on how often specific search terms are entered into Google over time, allowing researchers to analyze patterns in public interest and behavior. The platform aggregates search data and normalizes it so that trends can be compared across different time periods and geographic regions. Researchers can use this tool to track changes in attention, identify spikes in interest around events, and compare the popularity of multiple topics. This is especially useful for studying real-time social trends, cultural shifts, and public reactions to news or events, although it only captures behavior from people who use Google and may not fully represent the entire population."))
-
-
-resources_df14 <- data.frame("resource name" = c("Wikipedia Pageviews"),
-                  "link" = c("https://pageviews.wmcloud.org/"),
-                  "custom_ready" = c("ready made"),
-                  "description" = c("Wikipedia Pageviews has a number that allow the public to view and compare statistics for wikipedia articles. These statistics include the number of page visits, the number of edits made, the number of page visits to an article in different languages, among others. This data may be used to analyse data similar to google trends, but with of an emphasis on summery articles rather than general google searches."))
-
-resources_df15 <- data.frame(
-  "resource name" = c("Google Trends"), 
-  "link" = c("https://trends.google.com/trends/"),
-  "custom_ready" = c("readymade"),
-  "description" = c(
-    "Google Trends provides data on search behavior over time, allowing researchers to analyze public interest and trends."
-  )
-)
-
-resources_df_all <- bind_rows(resources_df,
-                              resources_df2,
-                              resources_df3,
-                              resources_df4,
-                              resources_df5,
-                              resources_df6,
-                              resources_df7,
-                              resources_df8,
-                              resources_df9,
-                              resources_df10,
-                              resources_df11,
-                              resources_df12,
-                              resources_df13,
-                              resources_df14,
-                              resources_df15)
-
-# remove duplicates
-resources_df_all %<>%
-  distinct()
-
-
-
-
-library(kableExtra)
-
-knitr::kable(
-  head(resources_df_all, 50), longtable = TRUE, booktabs = TRUE,
- # caption = 'Collaborative Data Resource List'
-) %>%
-  kable_styling(font_size = 8) %>%
-  scroll_box(width = "100%", height = "400px") %>%
-  column_spec(1, width = "10cm") %>%
-  column_spec(2, width = "10cm") %>%
-  column_spec(3, width = "10cm") %>%
-  column_spec(4, width = "40cm")
-
-
-
-
-
-```
-
-
-
-
 Download all necessary libraries
 ```{r libraries, echo = T, message=F, warning=F}
 #Libraries
@@ -254,7 +107,7 @@ Using coord_flip to make bar chart horizontal. Reorder in ggplot will rank bars 
 state_total_graph <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+ #reorder 
   geom_bar(position = "dodge", stat = "identity", 
            aes(fill = Location))+
-           labs(x = "", y = "Total", title = "Total Population Incarcerated by State")+
+           labs(y = "Total", title = "Total Population Incarcerated by State")+
              coord_flip() 
 
 
@@ -267,7 +120,7 @@ state_total_graph
 Bar Chart 1B: Total Population Incarcerated by State Per 100,000 Capita
 Goal: Compare incarceration rates for all states
 
-```{r figure 1B, echo = T, message=F, warning=}
+```{r figure 1B, echo = T, message=F, warning=F}
 
 state_total_graph <- ggplot(states_incar_fpc, aes(x = reorder(NAME, `Female Incarceration Ratio Per 100,000`), y = `Female Incarceration Ratio Per 100,000`))+ #reorder 
   geom_bar(position = "dodge", stat = "identity", 
@@ -500,11 +353,11 @@ Spatial Graph 2: Ratio of total # of female incarcerated to male incarcerated pe
 #add female per male to spatial data 
 
 states_incar_fpm <- states_incar_fmpc %>%
-  mutate("Female/100,000 population to Male/100,000 Ratio" = `Female Incarceration Ratio Per 100,000`/ `Male Incarceration Ratio Per 100,000`)
+  mutate("Female per 100,000 population to Male per 100,000 Ratio" = `Female Incarceration Ratio Per 100,000`/ `Male Incarceration Ratio Per 100,000`)
 
 #plot combined data - Ratio of Female to Male
 ggplot(states_incar_fpm)+
-  geom_sf(aes(fill = `Female/100,000 population to Male/100,000 Ratio`))+
+  geom_sf(aes(fill = `Female per 100,000 population to Male per 100,000 Ratio`))+
   scale_fill_viridis(option = "magma", direction = -1)+
   labs(title = "Total Female to Total Male Incarceration Ratio in Each State")  +
   coord_sf(xlim = c(-185, -60))
@@ -515,7 +368,7 @@ ggplot(states_incar_fpm)+
 
 Spatial Graph 3: Highlighting states with specific policies on spatial graph of total # of female incarcerated to per capita arrests
 
-```{r figure 6, echo = T, message=F, warning=F}
+```{r figure 7, echo = T, message=F, warning=F}
 
 #highlight specific states 
 
