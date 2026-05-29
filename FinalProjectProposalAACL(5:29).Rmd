@@ -215,7 +215,6 @@ data %<>%
                             drop_na(Total) %>% #get rid of district of columbia and puerto rico because there is no data
   filter(!Location %in% c("U.S. total", "Federal", "All States"))
 
-
 #census API
 census_api_key("857ead205d4b6101ae723a246e9b6f95b1b827d4")
 
@@ -224,7 +223,8 @@ states <- get_acs(
   geography = "state",
   variables = "B01003_001",
   geometry = TRUE,
-  year = 2023)
+  year = 2023) %>%
+  filter(!NAME %in% c("District of Columbia", "Puerto Rico")) #remove these because no data as seen above 
 
 #combine data: USA map + incarceration rate
 states_incar <- states %>%
@@ -498,12 +498,13 @@ Spatial Graph 2: Ratio of total # of female incarcerated to male incarcerated pe
 ```{r figure 6, echo = T, message=F, warning=F}
 
 #add female per male to spatial data 
-#states_incar_fpm <- states_incar %>%
-  #mutate("Female to Male Incarceration Ratio" = Female/Male)
+
+states_incar_fpm <- states_incar_fmpc %>%
+  mutate("Female/100,000 population to Male/100,000 Ratio" = `Female Incarceration Ratio Per 100,000`/ `Male Incarceration Ratio Per 100,000`)
 
 #plot combined data - Ratio of Female to Male
 ggplot(states_incar_fpm)+
-  geom_sf(aes(fill = `Female to Male Incarceration Ratio`))+
+  geom_sf(aes(fill = `Female/100,000 population to Male/100,000 Ratio`))+
   scale_fill_viridis(option = "magma", direction = -1)+
   labs(title = "Total Female to Total Male Incarceration Ratio in Each State")  +
   coord_sf(xlim = c(-185, -60))
