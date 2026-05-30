@@ -384,7 +384,7 @@ ggplot(states_incar_fpc)+
   geom_sf(data = strict_prositution_states, 
           fill = NA, 
           color = "green",
-          size = 8) +
+          size = 0.5) +
   coord_sf(xlim = c(-185, -60))
 
 ```
