@@ -210,7 +210,7 @@ region_total_graph
 
 ```
 
-Bar Chart 3A: Total Incarceration Rate with States Divided by State by Gender
+Bar Chart 3A: Total Incarceration Rate with States Divided by State by Sex
 
 ```{r figure 3A, echo = T, message=F, warning=F}
 
@@ -225,7 +225,7 @@ state_total_stacked <- ggplot(state_data, aes(x = Location, y = Value))+
   geom_bar(position = "stack", stat = "identity",
            aes(fill = Gender))+
   theme_linedraw()+
-  labs(x = "State Separated by Gender", title = "Total Population Incarcerated by State and Gender")+
+  labs(x = "State Separated by Sex", title = "Total Population Incarcerated by State and Sex")+
   coord_flip() 
   
 #print plot 
@@ -233,22 +233,22 @@ state_total_stacked
 
 ```
 
-Bar Chart 3B: Total Incarceration Rate with States Divided by State by Gender  Per 100,000 People
+Bar Chart 3B: Total Incarceration Rate with States Divided by State by Sex Per 100,000 People
 
 ```{r figure 3B, echo = T, message=F, warning=F}
 
 #pivot longer
 gendered_states_incar_fmpc <- states_incar_fmpc %>%
   pivot_longer(cols = c(`Male Incarceration Ratio Per 100,000`, `Female Incarceration Ratio Per 100,000`),
-               names_to = "Gender",
+               names_to = "Sex",
                values_to = "Value")
  
 #plot              
 state_total_stacked <- ggplot(gendered_states_incar_fmpc, aes(x = NAME, y = Value))+
   geom_bar(position = "stack", stat = "identity",
-           aes(fill = Gender))+
+           aes(fill = Sex))+
   theme_linedraw()+
-  labs(x = "State Separated by Gender", title = "Total Population Incarcerated Per 100,000 by State and Gender")+
+  labs(x = "State Separated by Sex", title = "Total Population Incarcerated Per 100,000 by State and Sex")+
   coord_flip() 
   
 #print plot 
@@ -259,50 +259,50 @@ state_total_stacked
 
 
 
-Bar Chart 4A: Total Incarceration Rate with States Divided by Region by Gender
+Bar Chart 4A: Total Incarceration Rate with States Divided by Region by Sex
 
 ```{r figure 4A, echo = T, message=F, warning= F}
 
 #pivot longer
 region_data2 <- region_data %>%
   pivot_longer(cols = c(Male, Female),
-               names_to = "Gender",
+               names_to = "Sex",
                values_to = "Value")
               
     
 #plot 
-gender_by_region <- ggplot(region_data2, aes(x = Region, y = Value))+
+sex_by_region <- ggplot(region_data2, aes(x = Region, y = Value))+
   geom_bar(position = "stack", stat = "identity",
-           aes(fill = Gender))+
+           aes(fill = Sex))+
   theme_linedraw()+
-  labs(x = "Region Separated by Gender",  title = "Total Population Incarcerated by Region and Gender")+
+  labs(x = "Region Separated by Sex",  title = "Total Population Incarcerated by Region and Sex")+
   coord_flip() 
  
 #print plot  
-gender_by_region
+sex_by_region
 
 ```
-Bar Chart 4B: Total Incarceration Rate with States Divided by Region by Gender
+Bar Chart 4B: Total Incarceration Rate with States Divided by Region by Sex
 
 ```{r figure 4B, echo = T, message=F, warning= F}
 
 #pivot longer
 region_data_pc2 <- region_data_pc %>%
   pivot_longer(cols = c(`Male Incarceration Ratio Per 100,000`, `Female Incarceration Ratio Per 100,000`),
-               names_to = "Gender",
+               names_to = "Sex",
                values_to = "Value")
               
     
 #plot 
-gender_by_region_pc_graph <- ggplot(region_data_pc2, aes(x = Region, y = Value))+
+sex_by_region_pc_graph <- ggplot(region_data_pc2, aes(x = Region, y = Value))+
   geom_bar(position = "stack", stat = "identity",
-           aes(fill = Gender))+
+           aes(fill = Sex))+
   theme_linedraw()+
-  labs(x = "Region Separated by Gender",  title = "Total Population Incarcerated by Region and Gender Per 100,000")+
+  labs(x = "Region Separated by Sex",  title = "Total Population Incarcerated by Region and Sex Per 100,000")+
   coord_flip() 
  
 #print plot  
-gender_by_region_pc_graph
+sex_by_region_pc_graph
 
 ```
 
