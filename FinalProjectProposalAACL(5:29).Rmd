@@ -375,12 +375,12 @@ Spatial Graph 3: Highlighting states with specific policies on spatial graph of 
 strict_prositution_states <- states_incar_fpc %>% 
   filter(NAME %in% c("South Carolina", "Oklahoma", "Texas", "Utah", "Pennsylvaia", "Nevada", "Kentucky", "West Virginia", "Vermont", "Louisiana", "Idaho", "Indiana", "Illinois"))
 
-#Female Incarceration Ratio Per 100,000 in Each State Highlighting those with Strict Laws in White
+#Female Incarceration Ratio Per 100,000 in Each State Highlighting those with Strict Laws in Green
 ggplot(states_incar_fpc)+
   geom_sf(aes(fill = `Female Incarceration Ratio Per 100,000`))+
   scale_fill_viridis(option = "magma", direction = -1)+
   labs(title = "Female Incarceration Ratio Per 100,000 in Each State", 
-       subtitle = "States with Stricter Stances on Position are Highlighted in White Borders")+
+       subtitle = "States with Stricter Stances on Position are Highlighted in Green Borders")+
   geom_sf(data = strict_prositution_states, 
           fill = NA, 
           color = "green",
