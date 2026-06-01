@@ -71,7 +71,7 @@ data %<>%
 #census API
 census_api_key("857ead205d4b6101ae723a246e9b6f95b1b827d4")
 
-#add per capita with tidycensus
+#add per 100,000 with tidycensus
 states <- get_acs(
   geography = "state",
   variables = "B01003_001",
