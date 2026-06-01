@@ -348,7 +348,7 @@ Spatial Graph 3: Highlighting states with specific policies on spatial graph of 
 #highlight specific states 
 
 strict_prositution_states <- states_incar_fpc %>% 
-  filter(NAME %in% c("South Carolina", "Oklahoma", "Texas", "Utah", "Pennsylvaia", "Nevada", "Kentucky", "West Virginia", "Vermont", "Louisiana", "Idaho", "Indiana", "Illinois"))
+  filter(NAME %in% c("Oklahoma", "Texas", "Utah", "Pennsylvaia", "Nevada", "Kentucky", "West Virginia", "Vermont", "Louisiana", "Idaho", "Indiana", "Illinois"))
 
 #Female Incarceration Ratio Per 100,000 in Each State Highlighting those with Strict Laws in Green
 ggplot(states_incar_fpc)+
@@ -375,8 +375,8 @@ p-value is typically less than 0.05 (or 5%), the result is considered statistica
 strictness_states_incar_fpc <- states_incar_fpc %>% 
   mutate(Strictness=case_match(NAME,
                              #Strict
-                             c("South Carolina", "Oklahoma", "Texas", "Utah", "Pennsylvaia", "Nevada", "Kentucky", "West Virginia", "Vermont", "Louisiana", "Idaho", "Indiana", "Illinois") ~ "Strict",
-                             c("Maine", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "California", "New Jersey", "North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio", "Washington", "Oregon", "Wyoming", "Montana", "Colorado", "Arizona", "New Mexico", "Arkansas", "Mississippi", "Tennessee", "Alabama", "Georgia", "Florida", "North Carolina", "Maryland", "Delaware", "Pennsylvania", "Alaska", "Hawaii", "Virginia") ~ "Not Strict", 
+                             c("Oklahoma", "Texas", "Utah", "Pennsylvaia", "Nevada", "Kentucky", "West Virginia", "Vermont", "Louisiana", "Idaho", "Indiana", "Illinois") ~ "Strict",
+                             c("South Carolina", "Maine", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "California", "New Jersey", "North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio", "Washington", "Oregon", "Wyoming", "Montana", "Colorado", "Arizona", "New Mexico", "Arkansas", "Mississippi", "Tennessee", "Alabama", "Georgia", "Florida", "North Carolina", "Maryland", "Delaware", "Pennsylvania", "Alaska", "Hawaii", "Virginia") ~ "Not Strict", 
          .default = "Other")) %>%
   group_by(Strictness) %>% mutate(sum = sum(Total, na.rm = TRUE))
 
