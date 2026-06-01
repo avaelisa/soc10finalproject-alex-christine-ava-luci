@@ -117,7 +117,7 @@ state_total_graph
 ```
 
 
-Bar Chart 1B: Total Population Incarcerated by State Per 100,000 Capita
+Bar Chart 1B: Total Number of Females Incarcerated Per 100,000 People in the State
 Goal: Compare incarceration rates for all states
 
 ```{r figure 1B, echo = T, message=F, warning=F}
@@ -125,7 +125,7 @@ Goal: Compare incarceration rates for all states
 state_total_graph <- ggplot(states_incar_fpc, aes(x = reorder(NAME, `Female Incarceration Ratio Per 100,000`), y = `Female Incarceration Ratio Per 100,000`))+ #reorder 
   geom_bar(position = "dodge", stat = "identity", 
            aes(fill = NAME))+
-           labs(x = "", y = "Total", title = "Total Population Incarcerated by State")+
+           labs(x = "", y = "Total", title = "Total Number of Females Incarcerated Per 100,000 People in the State")+
              coord_flip() 
 
 
