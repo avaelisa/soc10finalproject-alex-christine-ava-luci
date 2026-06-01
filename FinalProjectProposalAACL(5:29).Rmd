@@ -1,7 +1,7 @@
 ---
 title: "Final Project Proposal"
-author: "Your Name Here! (group members here, optional)"
-date: "Date goes Here!"
+author: "Ava, Alex, Luci, and Christine"
+date: "5-31-26!"
 output: pdf_document
 ---
 
@@ -41,7 +41,7 @@ Download data
 
 url <- getURL("https://raw.githubusercontent.com/avaelisa/soc10finalproject-alex-christine-ava-luci/refs/heads/main/soc10-dataset")
 
-# download incarceration data (from github)
+# download incarceration data from the BJS (from github)
 data <- read_csv(url)
 
 #View(data)
