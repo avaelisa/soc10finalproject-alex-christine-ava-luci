@@ -217,13 +217,13 @@ Bar Chart 3A: Total Incarceration Rate with States Divided by State by Sex
 #pivot longer
 state_data <- data %>%
   pivot_longer(cols = c(Male, Female),
-               names_to = "Gender",
+               names_to = "Sex",
                values_to = "Value")
  
 #plot              
 state_total_stacked <- ggplot(state_data, aes(x = Location, y = Value))+
   geom_bar(position = "stack", stat = "identity",
-           aes(fill = Gender))+
+           aes(fill = Sex))+
   theme_linedraw()+
   labs(x = "State Separated by Sex", title = "Total Population Incarcerated by State and Sex")+
   coord_flip() 
