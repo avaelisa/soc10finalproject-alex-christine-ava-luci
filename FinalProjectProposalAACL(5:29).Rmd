@@ -136,7 +136,7 @@ state_total_graph
 
 
 
-Bar Chart 2A: Total Incarceration Rate with States Divided by Region 
+Bar Chart 2A: Total Number of People Incarcerated: Divided by Region 
 
 The states were divided into regions through case_match.
 
@@ -173,7 +173,7 @@ region_total_graph
 
 
 
-Bar Chart 2A: Total Incarceration Rate with States Divided by Region Per 100,000 Population
+Bar Chart 2B: Total Numbers of Females Incarcerated Per 100,000 Population: Divided by Region 
 
 The states were divided into regions through case_match.
 
@@ -328,7 +328,7 @@ Set up spatial data - I thinK WE CAN DEKETE ThIS
 ```
 
 
-Spatial Graph 1: Total # of women incarcerated per 100,000 people
+Spatial Graph 1: Total Number of Females Incarcerated per 100,000 People
 
 ```{r figure 5, echo = T, message=F, warning=F}
 
@@ -346,7 +346,7 @@ ggplot(states_incar_fpc)+
 ```
 
 
-Spatial Graph 2: Ratio of total # of female incarcerated to male incarcerated per State
+Spatial Graph 2: Ratio of total Number of Females Incarcerated to Males Incarcerated per State
 
 ```{r figure 6, echo = T, message=F, warning=F}
 
@@ -366,7 +366,7 @@ ggplot(states_incar_fpm)+
 
   
 
-Spatial Graph 3: Highlighting states with specific policies on spatial graph of total # of female incarcerated to per capita arrests
+Spatial Graph 3: Highlighting states with specific policies on spatial graph of total # of female incarcerated to per 100,000 people's arrests
 
 ```{r figure 7, echo = T, message=F, warning=F}
 
