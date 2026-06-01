@@ -201,7 +201,7 @@ region_data_pc <- states_incar_fmpc %>%
 region_total_graph <- 
   ggplot(region_data_pc, aes(x = reorder(Region, estimate), y = sum)) +
   geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
-  labs(x = "Region", y = "Total", title = "Total Population Incarcerated by Region Per 100,000 Capita")+
+  labs(x = "Region", y = "Total", title = "Total Population Incarcerated by Region Per 100,000 People")+
   theme_linedraw()+
   coord_flip()
 
