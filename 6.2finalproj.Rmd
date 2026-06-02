@@ -89,19 +89,19 @@ head(states_incar) #Combined tidycensus and BJS data
 
 #add number of females incarcerated per one hundred thousand people to the spatial data
 states_incar_fpc <- states_incar %>%
-  mutate("Number of Females Incarcerated Per 100,000 People in Each State" = Female/estimate*100000)
+  mutate("Number of Females Incarcerated Per 100,000 People" = Female/estimate*100000)
 
 head(states_incar_fpc) #New data set includes Number of Females Incarcerated Per 100,000 People in Each State in state population
 
 #Create column of number of males incarcerated per 1000,000 people into dataset with spatial data and Number of Females Incarcerated Per 100,000 People in Each State
 states_incar_fmpc <- states_incar_fpc %>%
-  mutate("Number of Males Incarcerated Per 100,000 People in Each State" = Male/estimate*100000)
+  mutate("Number of Males Incarcerated Per 100,000 People" = Male/estimate*100000)
 
 head(states_incar_fmpc) #New data set includes number males incarcerated per 100,000 people in the state population
 
 #total number of people incarcerated per population in each state
 states_incar_ipp <- states_incar %>%
-  mutate("Number of People Incarcerated Per 100,000 People in Each State" = Total/estimate*100000)
+  mutate("Number of People Incarcerated Per 100,000 People" = Total/estimate*100000)
 
 ```
 
@@ -114,10 +114,10 @@ Using coord_flip to make bar chart horizontal. Reorder in ggplot will rank bars 
 ```{r figure 1A, echo = T, message=F, warning=F}
 
 state_total_graph <- ggplot(data, aes(x = reorder(Location, Total), y = Total))+ #Reorder 
-  geom_bar(position = "dodge", stat = "identity", 
-           aes(fill = Location))+
+  geom_bar(position = "dodge", stat = "identity")+
            labs(y = "Total", x="State", title = "Total Population Incarcerated by State")+
-             coord_flip() 
+             coord_flip() +
+  theme(legend.position = "none")
 
 
 #See visualization 
@@ -129,11 +129,11 @@ Goal: Compare total incarceration according to population for all states
 
 ```{r figure 1b, echo = T, message=F, warning=F }
         
-state_pop_ratio_graph <- ggplot(states_incar_ipp, aes(x = reorder(NAME, `Number of People Incarcerated Per 100,000 People in Each State`), y = `Number of People Incarcerated Per 100,000 People in Each State`))+ #reorder 
-  geom_bar(position = "dodge", stat = "identity", 
-           aes(fill = NAME))+
+state_pop_ratio_graph <- ggplot(states_incar_ipp, aes(x = reorder(NAME, `Number of People Incarcerated Per 100,000 People`), y = `Number of People Incarcerated Per 100,000 People`))+ #reorder 
+  geom_bar(position = "dodge", stat = "identity")+
            labs(x = "State", y = "Total", title = "Number of People Incarcerated Per 100,000 People in Each State")+
-             coord_flip() 
+             coord_flip() +
+  theme(legend.position = "none")
 
 
 #See visualization 
@@ -148,11 +148,11 @@ Goal: Compare female incarceration according to population for all states
 
 ```{r figure 1C, echo = T, message=F, warning=F}
 
-state_female_ratio_graph <- ggplot(states_incar_fpc, aes(x = reorder(NAME, `Number of Females Incarcerated Per 100,000 People in Each State`), y = `Number of Females Incarcerated Per 100,000 People in Each State`))+ #reorder 
-  geom_bar(position = "dodge", stat = "identity", 
-           aes(fill = NAME))+
+state_female_ratio_graph <- ggplot(states_incar_fpc, aes(x = reorder(NAME, `Number of Females Incarcerated Per 100,000 People`), y = `Number of Females Incarcerated Per 100,000 People`))+ #reorder 
+  geom_bar(position = "dodge", stat = "identity") +
            labs(x = "State", y = "Total", title = "Number of Females Incarcerated Per 100,000 People in Each State")+
-             coord_flip() 
+             coord_flip() +
+  theme(legend.position = "none")
 
 
 #See visualization 
@@ -170,8 +170,8 @@ The states were divided into regions through case_match. Each state's incarcerat
 
 ```{r figure 2, echo = T, message=F, warning=F}
 
-region_data <- data %>% 
-  mutate(Region=case_match(Location,
+states_incar_region <- states_incar %>% 
+  mutate(Region=case_match(NAME,
                              #Northeast
                              c("Maine", "Vermont", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "Pennsylvania", "New Jersey", "Virginia") ~ "Northeast",
                              #Midwest
@@ -180,9 +180,24 @@ region_data <- data %>%
                              c("Washington", "Oregon", "California", "Nevada", "Idaho", "Wyoming", "Montana", "Colorado", "Utah", "Arizona", "New Mexico") ~ "West",
                              #South
                              c("Texas", "Oklahoma", "Arkansas", "Louisiana", "Mississippi", "Kentucky", "Tennessee", "Alabama", "Georgia", "West Virginia", "Florida", "South Carolina", "North Carolina", "Maryland", "Delaware") ~ "South",
-                             .default = "Other")) %>%
+                             .default = "Other")) %>% #alaska and hawaii
                             drop_na(Total) %>%
   group_by(Region) %>% mutate(sum = sum(Total, na.rm = TRUE))
+
+#total population in each region
+states_incar_region2 <- states_incar_region %>% 
+  mutate(Region=case_match(NAME,
+                             #Northeast
+                             c("Maine", "Vermont", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "Pennsylvania", "New Jersey", "Virginia") ~ "Northeast",
+                             #Midwest
+                             c("North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio", "Indiana") ~ "Midwest",
+                             #West
+                             c("Washington", "Oregon", "California", "Nevada", "Idaho", "Wyoming", "Montana", "Colorado", "Utah", "Arizona", "New Mexico") ~ "West",
+                             #South
+                             c("Texas", "Oklahoma", "Arkansas", "Louisiana", "Mississippi", "Kentucky", "Tennessee", "Alabama", "Georgia", "West Virginia", "Florida", "South Carolina", "North Carolina", "Maryland", "Delaware") ~ "South",
+                             .default = "Other")) %>% #alaska and hawaii
+                            drop_na(Total) %>%
+  group_by(Region) %>% mutate(sum = sum(estimate, na.rm = TRUE))
 
 #View(region_data)
 
@@ -209,21 +224,9 @@ Goal: To show the Number of people incarcerated per 100,000 people in each regio
 ```{r figure 2B, echo = T, message=F, warning=F}
 
 
-region_data_ipp <- states_incar_ipp %>% 
-  mutate(Region=case_match(NAME,
-                             #Northeast
-                             c("Maine", "Vermont", "New Hampshire", "Massachusetts", "Connecticut", "Rhode Island", "New York", "Pennsylvania", "New Jersey", "Virginia") ~ "Northeast",
-                             #Midwest
-                             c("North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio", "Indiana") ~ "Midwest",
-                             #West
-                             c("Washington", "Oregon", "California", "Nevada", "Idaho", "Wyoming", "Montana", "Colorado", "Utah", "Arizona", "New Mexico") ~ "West",
-                             #South
-                             c("Texas", "Oklahoma", "Arkansas", "Louisiana", "Mississippi", "Kentucky", "Tennessee", "Alabama", "Georgia", "West Virginia", "Florida", "South Carolina", "North Carolina", "Maryland", "Delaware") ~ "South",
-                             .default = "Other")) %>%
-                            drop_na(Total) %>%
-  group_by(Region) %>% mutate(sum = sum(`Number of People Incarcerated Per 100,000 People in Each State`, na.rm = TRUE))
 
-#View(region_data_pc)
+
+#View(region_data_fpc)
 
 head(region_data_ipp) #number of people incarcerated per 100,000 people by region
 
@@ -260,11 +263,11 @@ region_data_fpc <- states_incar_fmpc %>%
                              c("Texas", "Oklahoma", "Arkansas", "Louisiana", "Mississippi", "Kentucky", "Tennessee", "Alabama", "Georgia", "West Virginia", "Florida", "South Carolina", "North Carolina", "Maryland", "Delaware") ~ "South",
                              .default = "Other")) %>%
                             drop_na(Total) %>%
-  group_by(Region) %>% mutate(sum = sum(`Number of Females Incarcerated Per 100,000 People in Each State`, na.rm = TRUE))
+  group_by(Region) %>% mutate(sum = sum(`Number of Females Incarcerated Per 100,000 People`, na.rm = TRUE))
 
-#View(region_data_pc)
+#View(region_data_fpc)
 
-head(region_data_pc) #Ratio of females incarcerated per 100,000 people by region
+head(region_data_fpc) #Ratio of females incarcerated per 100,000 people by region
 
 #Plot
 region_totals_graph <- 
@@ -310,7 +313,7 @@ Goal: To show the Number of females incarcerated per 100,000 people in each stat
 
 #Pivot longer
 gendered_states_incar_fmpc <- states_incar_fmpc %>%
-  pivot_longer(cols = c(`Number of Males Incarcerated Per 100,000 People in Each State`, `Number of Females Incarcerated Per 100,000 People in Each State`),
+  pivot_longer(cols = c(`Number of Males Incarcerated Per 100,000 People`, `Number of Females Incarcerated Per 100,000 People`),
                names_to = "Sex",
                values_to = "Value")
  
@@ -320,7 +323,8 @@ state_total_stacked <- ggplot(gendered_states_incar_fmpc, aes(x = NAME, y = Valu
            aes(fill = Sex))+
   theme_linedraw()+
   labs(x = "State", y = "Number of People Incarcerated Per 100,000 People in the State's Population", title = "Number of People Incarcerated Per 100,000 People in the State's Population by Sex")+
-  coord_flip() 
+  coord_flip() +
+  theme(legend.position = "bottom")
   
 #Show visualization
 state_total_stacked
@@ -359,18 +363,19 @@ To show the Number of females incarcerated per 100,000 people in each region by 
 ```{r figure 4B, echo=T, message=FALSE, warning=FALSE}
 
 #Pivot longer
-region_data_pc2 <- region_data_pc %>%
-  pivot_longer(cols = c(`Number of Females Incarcerated Per 100,000 People in Each State`, `Number of Males Incarcerated Per 100,000 People in Each State`),
+region_data_fpc2 <- region_data_fpc %>%
+  pivot_longer(cols = c(`Number of Females Incarcerated Per 100,000 People`, `Number of Males Incarcerated Per 100,000 People`),
                names_to = "Sex",
                values_to = "Value")
 
 #Plot 
-sex_by_region_pc_graph <- ggplot(region_data_pc2, aes(x = Region, y = Value))+
+sex_by_region_pc_graph <- ggplot(region_data_fpc2, aes(x = Region, y = Value))+
   geom_bar(position = "stack", stat = "identity",
            aes(fill = Sex))+
   theme_linedraw()+
-  labs(x = "Region", y= "Number of Females Incarcerated Per 100,000 People in Each Region", title = "Total Number of People Incarcerated Per 100,000 People in Each Region by Sex")+
-  coord_flip() 
+  labs(x = "Region", y= "Number of People Incarcerated Per 100,000 people", title = "Total Number of People Incarcerated Per 100,000 People")+
+  coord_flip() +
+  theme(legend.position = "bottom")
  
 #See Visualization  
 sex_by_region_pc_graph
@@ -384,10 +389,11 @@ Spatial Graph 1: Number of Females Incarcerated per 100,000 People in Each State
 
 #Plot spatial and Number of Females Incarcerated Per 100,000 People in Each State data
 ggplot(states_incar_fpc)+
-  geom_sf(aes(fill = `Number of Females Incarcerated Per 100,000 People in Each State`))+
+  geom_sf(aes(fill = `Number of Females Incarcerated Per 100,000 People`))+
   scale_fill_viridis(option = "magma", direction = -1)+
   labs(title = "Number of Females Incarcerated Per 100,000 People in Each State") +
-  coord_sf(xlim = c(-185, -60))
+  coord_sf(xlim = c(-185, -60)) +
+  theme(legend.position = "bottom")
 
 ```
 
@@ -399,7 +405,7 @@ Spatial Graph 2: Number of Females Incarcerated per 100,000 people in each state
 #Add Number of Females Incarcerated per 100,000 in State Population to Number of Males Incarcerated per 100,000 in State Population
 
 states_incar_fpm <- states_incar_fmpc %>%
-  mutate("Female per 100,000 population to Male per 100,000" = `Number of Females Incarcerated Per 100,000 People in Each State`/ `Number of Males Incarcerated Per 100,000 People in Each State`)
+  mutate("Female per 100,000 population to Male per 100,000" = `Number of Females Incarcerated Per 100,000 People`/ `Number of Males Incarcerated Per 100,000 People`)
 
 head(states_incar_fpm) #New data set with # of females incarcerated in a state /# of males incarcerated in a state
 
@@ -407,8 +413,9 @@ head(states_incar_fpm) #New data set with # of females incarcerated in a state /
 ggplot(states_incar_fpm)+
   geom_sf(aes(fill = `Female per 100,000 population to Male per 100,000`))+
   scale_fill_viridis(option = "magma", direction = -1)+
-  labs(title = "Number of Females Incarcerated per 100,000 people in each state to Number of Males Incarcerated per 100,000 People in Each State")  +
-  coord_sf(xlim = c(-185, -60))
+  labs(title = "Number of Females Incarcerated/100,000 people to Number of Males Incarcerated/100,000 people")  +
+  coord_sf(xlim = c(-185, -60)) +
+  theme(legend.position = "bottom")
 
 ```
 
@@ -427,7 +434,7 @@ head(strict_prositution_states) #new data set for states with stricter prostitui
 
 #Number of Females Incarcerated Per 100,000 People in Each State, Highlighting States with Strict Prostitution Laws in Green
 ggplot(states_incar_fpc)+
-  geom_sf(aes(fill = `Number of Females Incarcerated Per 100,000 People in Each State`))+
+  geom_sf(aes(fill = `Number of Females Incarcerated Per 100,000 People`))+
   scale_fill_viridis(option = "magma", direction = -1)+
   labs(title = "Number of Females Incarcerated Per 100,000 People in Each State", 
        subtitle = "States with Stricter Punishment on Prostitution are Highlighted in Green Borders")+
@@ -435,7 +442,8 @@ ggplot(states_incar_fpc)+
           fill = NA, 
           color = "green",
           size = 0.5) +
-  coord_sf(xlim = c(-185, -60))
+  coord_sf(xlim = c(-185, -60)) +
+  theme(legend.position = "bottom")
 
 ```
 
@@ -458,7 +466,7 @@ strictness_states_incar_fpc <- states_incar_fpc %>%
 head(strictness_states_incar_fpc) #shows new column that organizes states as strict vs not strict
 
 #T-test of strict vs not strict population Number of Females Incarcerated per 100,000 in State Population
-t.test(`Number of Females Incarcerated Per 100,000 People in Each State` ~ Strictness, data = strictness_states_incar_fpc)
+t.test(`Number of Females Incarcerated Per 100,000 People` ~ Strictness, data = strictness_states_incar_fpc)
 
 
 ```
