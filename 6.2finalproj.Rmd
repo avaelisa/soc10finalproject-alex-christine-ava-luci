@@ -122,9 +122,9 @@ states_incar_region <- states_incar %>%
   group_by(Region) %>% mutate(mincarsum = sum(Male, na.rm = TRUE)) 
 
 states_incar_region2 <- states_incar_region %>%
-  mutate("Number of Females Incarcerated Per 100,000 People per Region" = fincarsum/popsum*100000)%>%
-  mutate("Number of Males Incarcerated Per 100,000 People per Region" = mincarsum/popsum*100000) %>%
-  mutate("Number of People Incarcerated Per 100,000 People per Region" = incarsum/popsum*100000)
+  mutate("Number of Females Incarcerated Per 100,000 People in each Region" = fincarsum/popsum*100000)%>%
+  mutate("Number of Males Incarcerated Per 100,000 People in each Region" = mincarsum/popsum*100000) %>%
+  mutate("Number of People Incarcerated Per 100,000 People in each Region" = incarsum/popsum*100000)
   
 head(states_incar_region2) #States' data are now organized into their respective regions
 
@@ -212,10 +212,9 @@ Goal: To show the Number of people incarcerated per 100,000 people in each regio
 
 ```{r figure 2B, echo = T, message=F, warning=F}
 
-#View(region_data_fpc)
 #Plot
 region_ipp_graph <- 
-  ggplot(states_incar_region2, aes(x = reorder(Region, popsum), y = popsum)) +
+  ggplot(states_incar_region2, aes(x = reorder(Region, `Number of People Incarcerated Per 100,000 People in each Region`), y = `Number of People Incarcerated Per 100,000 People in each Region`)) +
   geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
   labs(x = "Region", y = "Number of People Incarcerated Per 100,000 People in Each Region", title = "Number of People Incarcerated Per 100,000 People in Each Region")+
   theme_linedraw()+
@@ -235,7 +234,7 @@ Goal: To show the Number of females incarcerated per 100,000 people in each regi
 
 #Plot
 region_totals_graph <- 
-  ggplot(states_incar_region2, aes(x = reorder(Region, `Number of Females Incarcerated Per 100,000 People per Region`), y = `Number of Females Incarcerated Per 100,000 People per Region`)) +
+  ggplot(states_incar_region2, aes(x = reorder(Region, `Number of Females Incarcerated Per 100,000 People in each Region`), y = `Number of Females Incarcerated Per 100,000 People in each Region`)) +
   geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
   labs(x = "Region", y = "Number of Females Incarcerated Per 100,000 People in Each Region", title = "Number of Females Incarcerated Per 100,000 People in Each Region")+
   theme_linedraw()+
@@ -304,13 +303,13 @@ Goal: To show sex differences in total incarcerated population in each region
 ```{r figure 4A, echo = T, message=F, warning= F}
 
 #Pivot longer
-region_data2 <- region_data %>%
+states_incar_region3 <- states_incar_region2 %>%
   pivot_longer(cols = c(Male, Female),
                names_to = "Sex",
                values_to = "Value")
 
 #Plot 
-sex_by_region <- ggplot(region_data2, aes(x = Region, y = Value))+
+sex_by_region <- ggplot(states_incar_region3, aes(x = Region, y = Value))+
   geom_bar(position = "stack", stat = "identity",
            aes(fill = Sex))+
   theme_linedraw()+
@@ -327,17 +326,17 @@ To show the Number of females incarcerated per 100,000 people in each region by 
 ```{r figure 4B, echo=T, message=FALSE, warning=FALSE}
 
 #Pivot longer
-region_data_fpc2 <- region_data_fpc %>%
-  pivot_longer(cols = c(`Number of Females Incarcerated Per 100,000 People`, `Number of Males Incarcerated Per 100,000 People`),
+region_data_fpc <- states_incar_region2 %>%
+  pivot_longer(cols = c(`Number of Females Incarcerated Per 100,000 People in each Region`, `Number of Males Incarcerated Per 100,000 People in each Region`),
                names_to = "Sex",
                values_to = "Value")
 
 #Plot 
-sex_by_region_pc_graph <- ggplot(region_data_fpc2, aes(x = Region, y = Value))+
+sex_by_region_pc_graph <- ggplot(region_data_fpc, aes(x = Region, y = Value))+
   geom_bar(position = "stack", stat = "identity",
            aes(fill = Sex))+
   theme_linedraw()+
-  labs(x = "Region", y= "Number of People Incarcerated Per 100,000 people", title = "Total Number of People Incarcerated Per 100,000 People")+
+  labs(x = "Region", y= "Number of People Incarcerated/100,000 people", title = "Total Number of People Incarcerated/100,000 People in Each Region by Sex")+
   coord_flip() +
   theme(legend.position = "bottom")
  
