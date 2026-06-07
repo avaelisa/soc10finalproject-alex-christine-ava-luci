@@ -2,7 +2,7 @@
 title: "Final Project: State/Region Incarceration Levels by Sex"
 author: "Ava, Alex, Luci, and Christine"
 date: "6-7-26"
-output: html_document
+output: pdf_document
 ---
 
 # Final Project Proposal
