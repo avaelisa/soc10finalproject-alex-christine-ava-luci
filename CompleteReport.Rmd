@@ -1,0 +1,791 @@
+---
+title: "Final Project: State/Region Incarceration Levels by Sex"
+author: "Ava, Alex, Luci, and Christine"
+date: "6-7-26"
+output: html_document
+---
+
+# Final Project Proposal
+
+Github Links:
+
+* Original Repository: https://github.com/avaelisa/soc10finalproject-alex-christine-ava-luci
+* Repository for the Website: https://github.com/avaelisa/Final-Project-SOC10-aacl
+
+## Table of Contents
+
+* Introduction
+* Data Sources
+* Data Processing and Methods
+* Limitations
+* Conclusion
+* Contributions
+* References
+* Appendix
+  - Appendix A: Original BJS CSV Dataset
+  - Appendix B: Prostitution Data
+
+## Introduction 
+
+The United States of America is the world's leader in incarceration, jailing and imprisoning almost two million people at this very moment. Incarceration rates skyrocketed in the 1970s as a response to politically imposed fear surrounding the “war on drugs” and a racialized crackdown on crime, allowing incarceration to reach its peak in 2009 (e.g., Alexander 2010). These trends of heightened jailing are often referred to as mass incarceration, where “the U.S. incarcerates more people than any nation in the world” (Cullen 2018).  This is a phenomenon that is often racialized and classed, targeting those on the margins and disproportionately affecting poor Black people (e.g., Clair 2020). 
+
+While incarceration rates began to decline in 2010 and dropped sharply during the COVID-19 pandemic, recent years starting in 2022 have seen them trend upward again (Nellis and Pearce 2026). This is especially alarming given that the Vera Institute of Justice found that “there is a very weak relationship between higher incarceration rates and lower crime rates”(Stemen 2017). As a result of this heightened incarceration, more individuals became exposed to consequences beyond loss of freedom, which include potential violence behind bars, forced gang involvement, exposure to disease, and the potential for death while in custody. Additionally, punishment does not end just with the time spent incarcerated, as it often leads to further barriers after imprisonment, including legal, social, financial, and psychological obstacles, coupled with potential discrimination when it comes to securing employment and housing. The effects of incarceration do not apply simply to those incarcerated but also hold additional collateral consequences for the families and loved ones of those incarcerated (e.g., Megan 2019).
+
+Recognizing the harmful impacts of incarceration and the steady increases in national incarceration rates in the past few years, our group hopes to discover whether high levels of prison incarceration are primarily concentrated in a few states and/or regions — which contribute disproportionately to the national average — or if all states and regions are facing high and increasing rates of incarceration within prisons. Some language surrounding mass incarceration has previously referred to the United States as a mass contributor without recognizing if specific states contribute less or higher to this large-scale issue (e.g., Sawyer, Nam-Sonenstein, Wagner 2026) . Additionally, while some organizations (e.g., Nellis and Pearce 2026) do make efforts to spotlight states with heightened incarceration rates, regional differences are not often mentioned online. While we were initially planning to compare state-level incarceration rates to federal incarceration rates, we ultimately decided, based on the data available, that it would be more informative to conduct analyses within the state-level/regional context to keep the focus on these areas. Studying regions alongside individual states helps us to understand whether states in proximity to each other have similar patterns in regards to incarceration. Overall, this allows us to understand and answer one of our central research questions: How do incarceration levels vary from state to state and region by region? 
+
+Another variable of interest is whether the number of females and males incarcerated differs across states, as well as if this is correlated to policies that target a specific sex. Historically, the literature surrounding incarceration often centers males without elevating policies or actions that may leave females most vulnerable to incarceration. Retired Sociology Professor Sandra Enos even asserts in her piece, "Mass Incarceration: Triple Jeopardy for Women in a 'Color-Blind' and Gender-Neutral Justice System," that the "strain of research [regarding the war on crime] has focused on men" (2012).Therefore, our work aims to bridge this gap and focus on whether sex can be a stratifier within incarceration numbers. In this project, we conflated gender and sex, given that our dataset only provided data based on sex.
+
+While there are far more men facing the criminal system than women, the Council on Criminal Justice reveals that “the incarceration rate for women in U.S. prisons and jails has trended upward over the past several decades” (Yen 2024), indicating that sex discrimination may play a role in heightened incarceration. Therefore, this leads to our secondary research question: How do state-level prison incarceration numbers vary by sex? Posing this research question will allow us to understand if sex is a characteristic leading to disproportionate rates of incarceration across states.
+
+By leveraging ready-made data from the Bureau of Justice Statistics and the U.S. Census, we identified states’ incarceration numbers, including by sex, and also controlled for population size. Therefore, it may indicate which states should make greater efforts toward reform. In addition to better understanding if sex played a factor in incarceration rate disproportionalities, we investigated states with harsher punishment for a crime often associated with female offenders: prostitution. FBI Data on offenses charged in 2017 reveals that nearly every crime, from robbery to gambling, had more than a majority of arrests and charges placed on men. Yet, the one exception is "prostitution and commercialized vice," a crime that resulted in 61% of those arrests coming from female offenders (Federal Bureau of Investigation 2017). While prostitution is legalized in certain parts of Nevada, all other states criminalize sex work (Decriminalize Sex Work 2023). While most states classify prostitution as a misdemeanor, 12 states, which we classify as "stricter states," have harsher punishments for this crime. Texas, Utah, Pennsylvania, Nevada, Kentucky, West Virginia, Vermont, Oklahoma, Louisiana, Idaho, Indiana, and Illinois will turn prostitution offenses into a felony charge or meet this crime with felony level punishments, such as 3 years' imprisonment under certain circumstances (repeat offenses or doing sex work while knowingly having Human Immunodeficiency Virus (HIV)) (Decriminalize Sex Work 2023). By focusing on states with stricter prostitution policies, this may reveal whether states with stricter punishments for crimes applied more frequently to females are correlated with higher female incarceration rates. Additionally, a 2020 study performed by health researchers Kim and Peterson indicated that despite only a small proportion of those incarcerated in female institutions being detained due to prostitution related offenses, roughly half of those incarcerated in their study had engaged in sex work despite not being incarcerated for sex work. Overall, this indicating that criminalizing sex work has the potential to inadvertently criminalize those already living on the margins, in addition to potentially influencing state-level incarceration numbers based on the sex of the offender. This is why we chose to focus on this topic for our project. 
+
+The results and findings of our research will be further explored in the following sections, using computational social science methods in R, including data visualization and t-tests, comparing incarceration levels across different states.
+
+## Data Sources
+
+The statewide incarceration rate data used in our analysis is derived from the Correctional Populations in the United States Statistics Tables, a nationwide report published in 2023 by the Bureau of Justice Statistics (BJS) that summarizes information on populations supervised by parole agencies, incarcerated in state or federal prisons, or held in custody at old local jails, including data on sex, race, and ethnicity. The BJS is the official statistical agency of the Department of Justice and is considered the primary source for criminal justice statistics in the United States (“About BJS”). 
+
+Our dataset specifically included incarceration statistics under state or federal correctional authorities by sex in 2022 and 2023, excluding local incarceration data (link to csv). Given that in the United States there are around 546,000 people (84,000 of which are women) confined in local jails, excluding this data is an important limitation to our study (Sawyer, Wagner, and Nam-Sonenstein 2016). Additionally, more incarcerated women are held in jails than in state prisons and people who are arrested for prostitution crimes are more likely to serve misdemeanor sentences in local prisons (Kajstura and Sawyer 2024).  
+
+The tidycensus package was imported into the code and an API key was used in order to access statistics on the population in each state and spatial data (see “Methods”). Tidycensus enabled us to access credible data provided by the U.S Census Bureau, the federal government’s largest statistical agency for censuses and surveys (“U.S. Census Bureau at a Glance”). This data was used to create bar charts with defined populations that illustrated cohesively across the project as well as spatial data reflecting trends amongst incarceration and location. To connect states to their corresponding incarceration rates, the “left_join()” and “filter()” functions were also written into the code. 
+
+Additionally, data from the 501(c)3 national non-profit organization, Decriminalize Sex Work (DSW), was included in our analysis in order to understand state policie and legislation in order to identify the penalties surrounding sex work. DSW works to improve public attitudes toward sex work and the decriminalization of prostitution through public education, policy outreach, and lobbying state legislatures to change laws. According to DSW, decriminalizing sex work may help end human trafficking, improve public health, and promote community safety by making it possible for victims and witnesses to report exploitation without risking prosecution (“Why Decriminalization of Sex Work,” DSW). As such, their data was helpful in examining each state's prostitution laws to find any potential discrepancies or correlations between statewide prostitution law severity and incarceration rates among females compared to males. 
+
+Statistical tables from the BJS was read into R using the standard “read_csv()” function in the readr and RCurl packages. Tigris, viridis, tidycensus, sf,  dyplr, tidyr, and ggplot 2 were installed to process the data, as well as create and run the below graphs. The “mutate()” function was applied to ensure uniformity across the code while removing unnecessary variables, which was initially an obstacle encountered when cleaning the data. “Filter()” was used to eliminate places for which there was no data and were not states – Washington D.C and Puerto Rico. 
+
+These data sources were all integral to our project as they allowed us to view state-specific incarceration rates (where historically the literature has mostly focused on measuring federal incarceration rates), examine any sex-specific trends that emerged, and track possible correlations between state prostitution law severity and incarceration rates for a few states.  
+
+
+## Data Processing, Methods, and Figures
+
+### Data Processing
+
+Our class readings focused on both the practical ways to code data visualization, but also on the methods through which we choose to share data. In sociology, data visualizations have been historically important. For example, Du Bois’ work shows how he depicted and interrogated racial inequality through data visualizations and utilized spatial data to identify water pumps associated with cholera (Battle-Baptiste and Rusert 2018). Our group took these class lessons and readings into consideration when discussing how we should show the data.
+	
+For our methods, we employed several tools in R to analyze the data. We used the Bureau of Justice (BJS) statistics data from 2023, which measured the number of people incarcerated in each state in the United States, and we loaded this dataset into our R markdown file. Our BJS data is “big” and it was also “dirty,” which means that it includes information that is not relevant or applicable to our research question (Salganick 2017). This means that we were required to pre-process and “clean” the data before we could apply our code and create our data visualizations. We used R’s “mutate” and “case_match” feature to do this. From the dataset, there were several state names that needed to be edited because they had “/b” attached to the state’s name (e.g., “Alaska/b” needed to become “Alaska”) through the mutate feature to match tidycensus data and for presentation purposes. The data signifiers, although providing valuable information on differences about how the number of incarcerated individuals was counted, needed to be edited to pair the data through tidycensus and for the overall aesthetics. We address these differences on how the number of incarcerated individuals was counted in our limitations. Moreover, we also needed to get rid of the “U.S. total,” “Federal,” and “All States” incarceration rates from the data, as we were only looking at incarceration rates from individual states. In addition, we dropped Washington D.C. and Puerto Rico from the dataset because they had no available data on those locations and they are not states. This dataset is titled “data” in our R markdown file. 
+
+We also wanted to look at the data by population size in each state and region because we were interested to see how different policies, cultures, and locations can influence incarceration rates. In order to do this and ensure that we were analyzing the data proportionally to the population, we had to create a measure on how many females, males, and individuals were being incarcerated per 100,000 people in each state. This measure is important because only looking at the total number of people incarcerated in the state might be misleading, as some states’ higher population size might lead to higher numbers of people incarcerated. Thus, we sought to find the proportion of people incarcerated compared to the total population in the state. In order to do this we used tidycensus and an API Key to get population data for the year 2023 using the variable “B01003_001”, the same year as our incarceration data. We filtered out Washington D.C. and Puerto Rico here as well as we did not need them in the dataset. Then, we joined the datasets using left_join() using the column titles for each dataset (NAME for tidycensus and Location for BJS).
+	
+Download all necessary libraries
+```{r libraries, echo = T, message=F, warning=F}
+#Libraries
+library(RCurl)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(sf)
+library(tidycensus)
+library(tigris)
+library(viridis)
+library(magrittr)
+
+```
+
+
+Download data 
+```{r data, echo = T, message=F, warning=F}
+
+url <- getURL("https://raw.githubusercontent.com/avaelisa/soc10finalproject-alex-christine-ava-luci/refs/heads/main/soc10-dataset")
+
+# download incarceration data from the BJS (from github)
+data <- read_csv(url)
+
+head(data) #uncleaned data downloaded from the BJS
+
+```
+
+Data processing part 1: fix names, prep per 100,000 people, and spatial data 
+
+```{r data processing 1, echo = T, message=F, warning=F}
+
+#Mutate to fix state names (remove data type signifiers) and remove U.S. total, Federal, and All 
+#States from BJS dataset
+data %<>%
+  mutate(Location=case_match(Location,
+                             "Alaska/b"~"Alaska",
+                             "Connecticut/b"~"Connecticut",
+                             "Delaware/b"~"Delaware",
+                             "Hawaii/b"~"Hawaii",
+                             "Maryland/c"~"Maryland",
+                             "Missouri/d"~"Missouri",
+                             "Oklahoma/c"~"Oklahoma",
+                             "Rhode Island/b"~"Rhode Island",
+                             "Vermont/b"~"Vermont",
+                             .default=Location)) %>%
+                            drop_na(Total) %>% #Get rid of Washington D.C. and Puerto Rico 
+  filter(!Location %in% c("U.S. total", "Federal", "All States"))
+
+head(data) #Cleaned data
+```
+
+```{r data processing 1A, echo = T, message=F, warning=F, results= 'hide'}
+
+#Census API
+census_api_key("857ead205d4b6101ae723a246e9b6f95b1b827d4")
+
+#Add spatial data and estimate data with tidycensus
+states <- get_acs(
+  geography = "state",
+  variables = "B01003_001",
+  geometry = TRUE,
+  year = 2023) %>%
+  filter(!NAME %in% c("District of Columbia", "Puerto Rico")) #remove these here as well
+```
+
+```{r data processing 1B, echo = T, message=F, warning=F}
+
+head(states) #Tidycensus state data from 2023 (matching 2023 BJS data)
+
+#Combine data with left_join USA map + incarceration rate
+states_incar <- states %>%
+  left_join(data, by = c("NAME" = "Location"))
+
+head(states_incar) #Combined tidycensus and BJS data 
+
+```
+
+After combining the datasets, we wanted to use this information to create new columns/variabels for comparison. We then created a new row where we divided the number of females incarcerated per state by the estimate (or population) in the state, and multiplied this by 100,000. This is under the dataset “states_incar_fmpc” (number of females and males incarcerated per one hundred thousand people). After, we added a column for the total number of men incarcerated per 100,000 people in each state by doing the same thing but using the total number of males incarcerated in each state as opposed to the total number of females (“states_incar_fmpc”).  We then added a column for the total number of people incarcerated per 100,000 people in each state by doing the same thing but using the total number of people incarcerated in each state as opposed to the total number of females (“states_incar_ipp”). Each time, we used the previous dataset to create the following dataset with the new column.
+
+```{r data processing 2, echo = T, message=F, warning=F}
+
+#add number of females incarcerated per one hundred thousand people to the spatial data
+states_incar_fpc <- states_incar %>%
+  mutate("Number of Females Incarcerated Per 100,000 People" = Female/estimate*100000)
+
+head(states_incar_fpc) #New data set includes Number of Females Incarcerated Per 100,000 
+#People in Each State in state population
+
+#Create column of number of males incarcerated per 1000,000 people into dataset with 
+#spatial data and Number of Females Incarcerated Per 100,000 People in Each State
+states_incar_fmpc <- states_incar_fpc %>%
+  mutate("Number of Males Incarcerated Per 100,000 People" = Male/estimate*100000)
+
+head(states_incar_fmpc) #New data set includes number males incarcerated per 100,000 
+#people in the state population
+
+#total number of people incarcerated per population in each state
+states_incar_ipp <- states_incar_fmpc %>%
+  mutate("Number of People Incarcerated Per 100,000 People" = Total/estimate*100000)
+```
+
+We also focused on region data per 100,000 people. We pre-processed the data by finding the number of females and males who are incarcerated in each region per 100,000 people in each region. The states in each region can be found in the code below. Note that since Hawaii and Alaska are not part of any of the regions, we categorized them under “Other”. We used mutate() t to group the regions and then used group_by() and sum() to group the regions and the sum of the total number of people incarcerated (incarsum), total population (popsum), total number of females incarcerated (fincarsum), and total number of males incarcerated (mincarsum) in each region. We created dataset “states_incar_region” with this grouping and variable creation. Then, we used this data set to create “states_incar_region2”, in which we would use mutate() to get the proportional data of incarceration in each region. The calculation for this was dividing each of the sums for each group (male, female, total) by the total population times 100,000. This gave us the total number of people in each region, giving us the ratio for the number of females/males/total population incarcerated per 100,000 people in each region. 
+
+```{r data processing 3, echo = T, message=F, warning=F}
+
+#preparing region data 
+states_incar_region <- states_incar_ipp %>% 
+  mutate(Region=case_match(NAME,
+                             #Northeast
+                             c("Maine", "Vermont", "New Hampshire", "Massachusetts", "Connecticut", 
+                               "Rhode Island", "New York", "Pennsylvania", "New Jersey") 
+                           ~ "Northeast",
+                             #Midwest
+                             c("North Dakota", "South Dakota", "Nebraska", "Kansas", "Minnesota", 
+                               "Iowa", "Missouri", "Illinois", "Wisconsin", "Michigan", "Ohio", 
+                               "Indiana") ~ "Midwest",
+                             #West
+                             c("Washington", "Oregon", "California", "Nevada", "Idaho", "Wyoming", 
+                               "Montana", "Colorado", "Utah", "Arizona", "New Mexico") ~ "West",
+                             #South
+                             c("Texas", "Oklahoma", "Arkansas", "Louisiana", "Mississippi", 
+                               "Kentucky", "Tennessee", "Alabama", "Georgia", "West Virginia", 
+                               "Florida", "South Carolina", "North Carolina", "Maryland", 
+                               "Delaware","Virginia") ~ "South",
+                             .default = "Other")) %>% #alaska and hawaii
+                            drop_na(Total) %>%
+  group_by(Region) %>% mutate(incarsum = sum(Total, na.rm = TRUE)) %>%
+  group_by(Region) %>% mutate(popsum = sum(estimate, na.rm = TRUE)) %>%
+  group_by(Region) %>% mutate(fincarsum = sum(Female, na.rm = TRUE)) %>%
+  group_by(Region) %>% mutate(mincarsum = sum(Male, na.rm = TRUE)) 
+
+states_incar_region2 <- states_incar_region %>%
+ mutate("Number of Females Incarcerated Per 100,000 People" = fincarsum/popsum*100000)%>%
+ mutate("Number of Males Incarcerated Per 100,000 People" = mincarsum/popsum*100000) %>%
+ mutate("Number of People Incarcerated Per 100,000 People" = incarsum/popsum*100000)
+  
+head(states_incar_region2) #States' data are now organized into their respective regions 
+#with the calculations of each of the sums in a column according to their region
+
+```
+
+### Methods and Figures
+
+After pre-processing the data, we were able to create visual bar plots. The first bar chart (Bar Chart 1A) we created compared the incarceration rates for all states. We took the preprocessed data and used ggplot to create the bar charts, which shows each state’s total incarceration rate. Each state is color-coded with a different color, shown through the legend. We used “coord_flip” to showcase the data horizontally because we believed this showed the data more clearly than vertically. 
+
+### *Bar Charts 1A, 1B, and 1C*
+
+Bar Chart 1A: Total Population Incarcerated by State
+Goal: Compare incarceration totals across all states
+
+Using coord_flip to make bar chart horizontal. Reorder in ggplot will rank bars from smallest to biggest so it is easier to see trends and which states have highest vs lowest incarceration rates. This will make data easier to analyze. 
+
+```{r figure 1A, echo = T, message=F, warning=F}
+
+state_total_graph <- ggplot(states_incar_ipp, aes(x = reorder(NAME, Total), y = Total))+ #Reorder 
+  geom_bar(position = "dodge", stat = "identity")+
+           labs(y = "Total", x="State", title = "Total Population Incarcerated by State")+
+             coord_flip() +
+  theme(legend.position = "none")
+
+
+#See visualization 
+state_total_graph 
+
+```
+
+To create Bar Chart 1B, we did the same thing as Bar Chart 1A, but utilized the variable “Number of People Incarcerated Per 100,000 People” instead of “Total”, as this would show us the number of people incarcerated in each state in relation to its total population. 
+
+Bar Chart 1B: Number of People Incarcerated Per 100,000 People in the State
+Goal: Compare total incarceration according to population for all states
+
+```{r figure 1b, echo = T, message=F, warning=F }
+        
+state_pop_ratio_graph <- ggplot(states_incar_ipp, 
+                                aes(x = reorder(NAME, 
+                                `Number of People Incarcerated Per 100,000 People`), 
+                               y = `Number of People Incarcerated Per 100,000 People`))+ #reorder 
+  geom_bar(position = "dodge", stat = "identity")+
+           labs(x = "State", y = "Total", 
+                title = "Number of People Incarcerated/100,000 People in Each State")+
+             coord_flip() +
+  theme(legend.position = "none")
+
+
+#See visualization 
+state_pop_ratio_graph
+
+
+```
+
+Bar Chart 1C begins to look into the female incarceration data and the total population of a state. Using pre-processed data “states_incar_ipp”, we plotted the number of females incarcerated per 100,000 people in the state’s total population. Through ggplot, this data was displayed through a bar graph for each state. 
+
+Bar Chart 1C: Number of Females Incarcerated Per 100,000 People in the State
+Goal: Compare female incarceration according to population for all states
+
+```{r figure 1C, echo = T, message=F, warning=F}
+
+state_female_ratio_graph <- ggplot(states_incar_ipp, 
+    aes(x = reorder(NAME, `Number of Females Incarcerated Per 100,000 People`), 
+        y = `Number of Females Incarcerated Per 100,000 People`))+ #reorder 
+  geom_bar(position = "dodge", stat = "identity") +
+           labs(x = "State", y = "Total", 
+                title = "Number of Females Incarcerated Per 100,000 People 
+in Each State")+
+             coord_flip() +
+  theme(legend.position = "none")
+
+
+#See visualization 
+state_female_ratio_graph
+
+```
+
+Overall, the bar charts from section 1 show the total number of people incarcerated as well as how many total people and females are incarcerated per 100,000 people within each state. The significance of this data visualization is that although mass incarceration is widely considered a federal trend, this data indicates that some states have much lower incarceration numbers than others. This data analysis points to how a few states may be disproportionately contributing to the total federal incarceration numbers. 
+
+### *Bar Charts 2A, 2B, and 2C*
+
+For Bar Chart 2A, used our precleaned dataset called “states_incar_region2” to organize create a bar chart of the total number of people incarcerated (“incarsum”) in different regions of the United States: “West,” “South,” “Midwest,” and “Northeast.” Hawaii and Alaska are counted together as “Other”. By adding up the number of people incarcerated in the states for each region, these functions then provided us the total number of people who were incarcerated in each region. Each region is color-coded, and there are labels that identify which region is which.  
+
+Bar Chart 2A: Total Number of People Incarcerated for Each Region (and preparing region data)
+Goal: Divide state data into their respective regions (Northeast, Midwest, West, South) and add number of people incarcerated for each region
+
+The states were divided into regions through case_match. Each state's incarceration numbers for each region were summed to calculate total incarceration numbers for each region.  
+
+```{r figure 2, echo = T, message=F, warning=F}
+
+#Plot
+region_total_graph <- 
+  ggplot(states_incar_region2, aes(x = reorder(Region, incarsum), y = incarsum)) +
+  geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
+  labs(x = "Region", y = "Total", title = "Total Number of People Incarcerated by Region")+
+  theme_linedraw()+
+  coord_flip()
+
+#See visualization
+region_total_graph
+
+```
+
+For Barchart 2B, we again used our precleaned dataset “states_incar_region2”. We completed the same steps as bar chart 2A; however, this time we used the variable “Number of People Incarcerated Per 100,000 People”. This allowed us to create a bar chart on the number of people incarcerated per 100,000 people in each region,
+
+Bar Chart 2B: Number of People Incarcerated Per 100,000 People in Population for Each Region 
+Goal: To show the Number of people incarcerated per 100,000 people in each region. This is important because this data takes into consideration total population size.  
+
+```{r figure 2B, echo = T, message=F, warning=F}
+
+#Plot
+region_ipp_graph <- 
+  ggplot(states_incar_region2, 
+         aes(x = reorder(Region, `Number of People Incarcerated Per 100,000 People`), 
+             y = `Number of People Incarcerated Per 100,000 People`)) +
+  geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
+  labs(x = "Region", y = "Number of People Incarcerated Per 100,000 People in Each Region", 
+       title = "Number of People Incarcerated Per 100,000 People in Each Region")+
+  theme_linedraw()+
+  coord_flip()
+
+#Show visualization
+region_ipp_graph
+
+```
+
+For Barchart 2C, we measured the number of females incarcerated per 100,000 people in each region. We used the same code as Bar Chart 2A and 2B, except we changed the variable displayed to be the sum of the total number of females incarcerated per 100,000 people instead of total/100,000 people. This provided another bar chart highlighting the differences in the number of females each state incarcerates. 
+
+Bar Chart 2C: Number of Females Incarcerated Per 100,000 People in Population for Each Region 
+Goal: To show the Number of females incarcerated per 100,000 people in each region. This is important because this data takes into consideration total population size.  
+
+```{r figure 2C, echo = T, message=F, warning=F}
+
+#Plot
+region_totals_graph <- 
+  ggplot(states_incar_region2, 
+         aes(x = reorder(Region, `Number of Females Incarcerated Per 100,000 People`), 
+             y = `Number of Females Incarcerated Per 100,000 People`)) +
+  geom_bar(aes(fill = Region), position = "dodge", stat = "identity")+
+  labs(x = "Region", y = "Number of Females Incarcerated Per 100,000 People in Each Region", 
+       title = "Number of Females Incarcerated Per 100,000 People in Each Region")+
+  theme_linedraw()+
+  coord_flip()
+
+#Show visualization
+region_totals_graph
+
+```
+
+Overall, the bar charts from section 2 identify the total number of people incarcerated as well as the number of people/females incarcerated per 100,000 people within each region. It is important to view the data visualizations that can show trends between proximate states and their total numbers of incarceration. Given that some regions have disproportionately higher incarceration numbers than others, this may point to regional-based differences that can explain disparate incarceration numbers. 
+
+### *Stacked Bar Charts 3A and 3B*
+
+For Barchart 3A, we provide a stacked bar chart to show the number of females incarcerated alongside the number of males incarcerated in each state. First, the variables in our state data were “pivoted longer” through the R function “pivot_longer” and the forward pipe operator to make the columns “Male” and “Female” from the “states_incar_ipp” dataset to “Sex.” Using ggplot and the new dataset we created through this, the numbers of males and females incarcerated within each state are shown and distinguished through color coding in the bar graph (where red represents female and blue represents male). Through the visualization provided by this bar graph, we can see the total number of people incarcerated in each state, as well as how many females and males make up this total. 
+
+
+Bar Chart 3A: Total Population Incarcerated in Each State by Sex
+Goal: To show sex differences in total incarcerated population in each state
+
+```{r figure 3A, echo = T, message=F, warning=F}
+
+#Pivot longer
+state_data <- states_incar_ipp %>%
+  pivot_longer(cols = c(Male, Female),
+               names_to = "Sex",
+               values_to = "Value")
+ 
+#plot              
+state_total_stacked <- ggplot(state_data, aes(x = NAME, y = Value))+
+  geom_bar(position = "stack", stat = "identity",
+           aes(fill = Sex))+
+  theme_linedraw()+
+  labs(x = "State", y = "Total Population Incarcerated", 
+       title = "Total Population Incarcerated in Each State by Sex")+
+  coord_flip() 
+  
+#Show visualization
+state_total_stacked
+
+```
+
+For Barchart 3B, we created a stacked bar chart to show the number of females incarcerated per every 100,000 people in the state, alongside the number of males incarcerated per every 100,000 people in the state. First, the variables in our state data were “pivoted longer” through the R function “pivot_longer” and the forward pipe operator to make the columns “Male Incarceration Ratio Per 100,000” and “Female Incarceration Ratio Per 100,000” from the “states_incar_ipp” dataset to “Sex.” Using ggplot and the new dataset created by this, the number of males incarcerated per 100,000 people in each state and the number of females incarcerated per 100,000 people within each state are shown and distinguished through color coding in the bar graph. In the graph, red represents “Female Incarceration Ratio Per 100,000” and blue represents “Male Incarceration Ratio Per 100,000”.  Through the visualization provided by this stacked bar graph, we can see the total number of each sex incarcerated per 100,000 people in each state by gender. Note, using case_match(), we renamed the variables to a shorter form, i.e. # of XX/100000, in order to save space on the graph. 
+
+Bar Chart 3B: Number of People Incarcerated Per 100,000 People in the State's Population by Sex
+Goal: To show the Number of females incarcerated per 100,000 people in each state by sex. This is important because this data takes into consideration total population size.  
+
+```{r figure 3B, echo = T, message=F, warning=F}
+
+#Pivot longer
+gendered_states_incar_fmpc <- states_incar_ipp %>%
+  pivot_longer(cols = c(`Number of Males Incarcerated Per 100,000 People`, 
+                        `Number of Females Incarcerated Per 100,000 People`),
+               names_to = "Sex",
+               values_to = "Value") %>% mutate(Sex=
+                case_match(Sex, "Number of Males Incarcerated Per 100,000 People" 
+                           ~ "# of Male/100,000", 
+                      "Number of Females Incarcerated Per 100,000 People" 
+                      ~ "# of Female/100,000"))
+ 
+#Plot              
+state_total_stacked <- ggplot(gendered_states_incar_fmpc, aes(x = NAME, y = Value))+
+  geom_bar(position = "stack", stat = "identity",
+           aes(fill = Sex))+
+  theme_linedraw()+
+  labs(x = "State", y = "Number of People Incarcerated Per 100,000 People in the State's Population", 
+       title = "Number of People Incarcerated/100,000 People in the State's 
+Population by Sex")+
+  coord_flip() +
+  theme(legend.position = "bottom")
+  
+#Show visualization
+state_total_stacked
+
+```
+
+
+### *Stacked Bar Charts 4A and 4B*
+
+For Barchart 4A, we created a stacked bar chart to display the number of females incarcerated alongside the number of males incarcerated in each region. First, the variables in our state data were “pivoted longer” through the R function “pivot_longer” and the forward pipe operator to make the columns “Male” and “Female” from the cleaned dataset to “Sex.” Using ggplot and our new dataset “states_incar_region3”, the total numbers of males and females incarcerated within each state are shown and distinguished through color coding in the bar graph (where red represents female and blue represents male). Through the visualization provided by this bar graph, we can see the total number of people incarcerated in each region, as well as how many females and males compose these totals. 
+
+Bar Chart 4A: Total Population Incarcerated in Each Region by Sex
+Goal: To show sex differences in total incarcerated population in each region
+
+```{r figure 4A, echo = T, message=F, warning= F}
+
+#Pivot longer
+states_incar_region3 <- states_incar_region2 %>%
+  pivot_longer(cols = c(Male, Female),
+               names_to = "Sex",
+               values_to = "Value")
+
+#Plot 
+sex_by_region <- ggplot(states_incar_region3, aes(x = Region, y = Value))+
+  geom_bar(position = "stack", stat = "identity",
+           aes(fill = Sex))+
+  theme_linedraw()+
+  labs(x = "Region", y= "Total Population Incarcerated in Each Region", 
+       title = "Total Population Incarcerated in Each Region by Sex")+
+  coord_flip() 
+ 
+#Print plot  
+sex_by_region
+
+```
+
+For Barchart 4B, we created a stacked bar chart to show the number of females incarcerated per every 100,000 people in the region, alongside the number of males incarcerated per every 100,000 people in the region. First, the variables in our region data were “pivoted longer” through the R function “pivot_longer” and the forward pipe operator to make the columns “Male Incarceration Ratio Per 100,000” and “Female Incarceration Ratio Per 100,000” from the BJS dataset to “Sex.” Using ggplot and the new dataset that we made in this process, the number of males and females incarcerated within each region per 100,000 people in the state are shown and distinguished through color coding in the bar graph. In the graph, red represents “Number of Females Incarcerated Per 100,000 People in Each Region” and blue represents “Number of Males Incarcerated Per 100,000 People in Each Region.” Note, using case_match(), on this graph as well, we renamed the variables to a shorter form i.e. # of XX/100000 inorder to save space on the graph.  Through the visualization provided by this bar graph, we can see the total number of people of the female and male sexes incarcerated per 100,000 people in each state. 
+
+
+Bar Chart 4B: Total Number of People Incarcerated Per 100,000 People in Each Region by Sex
+Goal: To show the Number of females incarcerated per 100,000 people in each region by sex. This is important because this data takes into consideration total population size.  
+
+```{r figure 4B, echo=T, message=FALSE, warning=FALSE}
+
+#Pivot longer
+region_data_fpc <- states_incar_region2 %>%
+  pivot_longer(cols = c(`Number of Females Incarcerated Per 100,000 People`, 
+                        `Number of Males Incarcerated Per 100,000 People`),
+               names_to = "Sex",
+               values_to = "Value") %>% mutate(Sex=
+                case_match(Sex, "Number of Males Incarcerated Per 100,000 People" 
+                           ~ "# of Male/100,000", 
+                      "Number of Females Incarcerated Per 100,000 People" 
+                      ~ "# of Female/100,000"))
+
+#Plot 
+sex_by_region_pc_graph <- ggplot(region_data_fpc, aes(x = Region, y = Value))+
+  geom_bar(position = "stack", stat = "identity",
+           aes(fill = Sex))+
+  theme_linedraw()+
+  labs(x = "Region", y= "Number of People Incarcerated/100,000 people", 
+       title = "Total Number of People Incarcerated/100,000 People in Each Region by Sex")+
+  coord_flip() +
+  theme(legend.position = "bottom")
+ 
+#See Visualization  
+sex_by_region_pc_graph
+ 
+```
+
+Having stacked bar charts by sex in both states and regions allows us to directly see how many males and females are composing each location’s total incarceration numbers. The data shows that overall, males are being incarcerated in higher numbers than females, but females are still being incarcerated at different rates across different regions and states. 
+
+### *Spatial Graphs 1, 2, 3*
+
+Utilizing the dataset set up earlier called “states_incar_ipp” with the variable “Female Incarceration Ratio Per 100,000”, we created a spatial map that displayed the number of females incarcerated per 100,000 people in each state. We use the color option “magma” in the viridis package where yellow represents the smaller ratios and a deep purple represents the highest ratios. We also filtered the coordinates using xlim so that Hawaii would be on the left side of the graph as opposed to the far right side of the scale. 
+
+Spatial Graph 1: Number of Females Incarcerated per 100,000 People in Each State
+Goal: To show the state data in new way using spatial analysis in hopes of finding trends based on location. 
+
+```{r figure 5, echo = T, message=F, warning=F}
+
+#Plot spatial and Number of Females Incarcerated Per 100,000 People in Each State data
+ggplot(states_incar_fpc)+
+  geom_sf(aes(fill = `Number of Females Incarcerated Per 100,000 People`))+
+  scale_fill_viridis(option = "magma", direction = -1)+
+  labs(title = "Number of Females Incarcerated Per 100,000 People in Each State") +
+  coord_sf(xlim = c(-185, -60)) +
+  theme(legend.position = "bottom")
+
+```
+
+We created a new dataset called “states_incar_ftm” in which we divided the total number of females incarcerated in each state by the number of males incarcerated in each state using the preprocessed dataset “states_incar_ipp”. We then created a spatial map that displayed the female to male incarceration ratio of people in each state using the color option “magma” in the viridis package—yellow represents the smaller ratios (less females to males) and a deep purple represents the highest ratios (more females to males). The spatial data is from tidycensus and was added with “left_join()” earlier. We also filtered the coordinates using xlim so that Hawaii would be on the left side of the graph as opposed to the far right side for the scale. 
+
+Spatial Graph 2: Number of Females Incarcerated per 100,000 people in each state to Number of Males Incarcerated per 100,000 People in Each State
+Goal: To visualize comparisons between male and female incarceration rates spatially
+
+```{r figure 6, echo = T, message=F, warning=F}
+
+#Add Number of Females Incarcerated per 100,000 in State Population to 
+#Number of Males Incarcerated per 100,000 in State Population
+
+states_incar_ftm <- states_incar_ipp %>%
+  mutate("Female per 100,000 population to Male per 100,000" = 
+           `Number of Females Incarcerated Per 100,000 People`/ 
+           `Number of Males Incarcerated Per 100,000 People`)
+
+head(states_incar_ftm) #New data set with # of females incarcerated 
+#in a state /# of males incarcerated in a state
+
+#plot combined data - Female to Male
+ggplot(states_incar_ftm)+
+  geom_sf(aes(fill = `Female per 100,000 population to Male per 100,000`))+
+  scale_fill_viridis(option = "magma", direction = -1)+
+  labs(title = "Number of Females Incarcerated/100,000 people per
+Number of Males Incarcerated/100,000 people")  +
+  coord_sf(xlim = c(-185, -60)) +
+  theme(legend.position = "bottom")
+
+```
+
+We created a new dataset with only the states that have escalated/sometimes escalate prostitution to a felony called “strict_prostitution_states”. The states included were Oklahoma, Texas, Utah, Pennsylvania, Nevada, Kentucky, West Virginia, Vermont, Louisiana, Idaho, Indiana, Illinois. We classified these states as stricter states. In order to make this dataset, we utilized “states_incar_ipp”. We then used geom_sf() to layer the outlines of these states onto Spatial Graph 1 in order to create borders of these specific states. We edited the borders of these specific states to have a thicker line width, as well as made them green, so that they would stand out. This graph highlights the number of females incarcerated per 100,000 people in the state alongside the specific states with stricter prostitution stances to allow for comparisons between states' legal punishment of prostitution and female incarceration numbers. At a quick glance, there does not appear to be a correlation between the two. 
+
+Spatial Graph 3: Highlighting states with specific policies on spatial graph of total # of female incarcerated to per 100,000 in each state
+Goal: To provide a way to spatially analyze female state incarceration data alongside visual markers on states with stricter stances. 
+
+```{r figure 7, echo = T, message=F, warning=F}
+
+#Highlight specific states 
+
+strict_prostitution_states <- states_incar_ipp %>% 
+  filter(NAME %in% c("Oklahoma", "Texas", "Utah", "Pennsylvania", "Nevada", "Kentucky", 
+                     "West Virginia", "Vermont", "Louisiana", "Idaho", "Indiana", 
+                     "Illinois"))
+
+head(strict_prostitution_states) #new data set for states with stricter prostitution laws
+
+#Number of Females Incarcerated Per 100,000 People in Each State, Highlighting States 
+#with Strict Prostitution Laws in Green
+
+ggplot(states_incar_ipp)+
+  geom_sf(aes(fill = `Number of Females Incarcerated Per 100,000 People`))+
+  scale_fill_viridis(option = "magma", direction = -1)+
+  labs(title = "Number of Females Incarcerated Per 100,000 People in Each State", 
+       subtitle = "States with Stricter Punishment on Prostitution are Highlighted in 
+Green Borders")+
+  geom_sf(data = strict_prostitution_states, 
+          fill = NA, 
+          color = "green",
+          size = 0.5) +
+  coord_sf(xlim = c(-185, -60)) +
+  theme(legend.position = "bottom")
+
+```
+
+### *T-Test*
+
+Although the spatial map showed that there does not seem to be a correlation between state policies and female incarceration numbers, we wanted to verify this through another method. The last function we ran through R was intended to tie together our policy research on prostitution laws to the data we had extracted from BJS and the U.S. Census data. Research on state prostitution laws showed us that the states with the strictest prostitution laws were Oklahoma (recently increased the level of penalties on prostitution), as well as Texas, Utah, Pennsylvania, Nevada, Kentucky, West Virginia, Vermont, Louisiana, Idaho, Indiana, Illinois (as these states can turn prostitution offenses to felony charges under specific circumstances). We created a column in which each of these states were labeled as strict or not strict based on the classifications used for the above map. We then began the t-test calculation. In order to do this we used an independent two sample t-tests, which is a measure used to determine if there is a significant difference between the means of two different groups (in which the p-value is less than 0.05). We utilized the default t-test in R, which is a two-tailed Welch’s (unpaired) two-sample t-test. Given that the p-value was 0.1561 and it must be under 0.05 to show statistical significance, we conclude that in our test, strict prostitution laws were not statistically significant in explaining incarceration rates. 
+
+T-Test: Highlighting states with specific policies on spatial graph of total # of female incarcerated to male incarcerated per state. If the p-value is less than 0.05 (or 5%), the result is considered statistically significant. 
+Goal: See if there is a statistically significant difference in female incarceration tp population ratios between strict versus non-strict states. 
+
+```{r t-test, echo = T, message=F, warning=F}
+
+#Add row for states with stricter punishments on prostitution vs not
+strictness_states_incar_fpi <- states_incar_ipp %>% 
+  mutate(Strictness=case_match(NAME,
+                             #Strict
+                             c("Oklahoma", "Texas", "Utah", "Pennsylvania", "Nevada", 
+                               "Kentucky", "West Virginia", "Vermont", "Louisiana", 
+                               "Idaho", "Indiana", "Illinois") ~ "Strict",
+                             c("South Carolina", "Maine", "New Hampshire", "Massachusetts", 
+                               "Connecticut", "Rhode Island", "New York", "California", 
+                               "New Jersey", "North Dakota", "South Dakota", "Nebraska", 
+                               "Kansas", "Minnesota", "Iowa", "Missouri",  
+                               "Wisconsin", "Michigan", "Ohio", "Washington", "Oregon", 
+                               "Wyoming", "Montana", "Colorado", "Arizona", "New Mexico", 
+                               "Arkansas", "Mississippi", "Tennessee", "Alabama", "Georgia", 
+                               "Florida", "North Carolina", "Maryland", "Delaware", 
+                               "Pennsylvania", "Alaska", "Hawaii", "Virginia") ~ "Not Strict")) %>%
+  group_by(Strictness) %>% mutate(sum = sum(Total, na.rm = TRUE))
+
+head(strictness_states_incar_fpi) #shows new column that organizes states as strict vs not strict
+
+#T-test of strict vs not strict population Number of Females Incarcerated per 100,000 in 
+#State Population
+t.test(`Number of Females Incarcerated Per 100,000 People` ~ Strictness, 
+       data = strictness_states_incar_fpi)
+
+
+```
+
+## Limitations
+
+Notably, there are a few areas of limitations within our project. Firstly, given that our BJS correctional statistics report is from 2023, the data is not fully up to date in 2026 and there might be changes that are simply not reflecting in our findings. Given that recent years have seen an increase in incarcerations rates since a historic period of the decline from 2010-2021 as previously mentioned, we were especially interested in post-2022 data, which had a reported increase in prison population data of up by 2% (Bureau of Justice Statistics 2025). The earliest available data from BJS being only in 2023 is a significant limitation in itself. We also did not look into local incarceration rates and focused on state and federal populations, for which some states had different definitions for incarceration and jurisdiction.
+
+To be more specific, the BJS identified several states that used different criteria in reporting incarceration information. For example, in Alaska, Connecticut, Delaware, Hawaii, Rhode Island, and Vermont, prisons and jails formed one integrated system and the data included total jail and prison populations. In Idaho and Missouri, they did not include people being held in federal or other state prisons in its sentenced jurisdiction count; in Illinois, Massachusetts, New Jersey, South Dakota, and Utah, their reported figures included a small number of prisoners sentenced to 1 year or less; in Maryland and Oklahoma, the figures included people who were waiting in county jail to be moved to state prison, whereas Nevada excluded people serving time in residential confinement from its sentenced jurisdiction count. Finally, Wisconsin sentenced population counts were based on time served rather than sentence length prior to 2023 (Bureau of Justice Statistics, National Prisoner Statistics, 2022 and 2023, Table 4). These inconsistencies across state reporting measures may have the potential to influence our findings. In doing this investigation, we must also recognize that incarceration divides strictly along the lines of biological sex. When gender is recognized, inconsistencies arise between state and federal institutions (Harkin 2016). 
+Furthermore, prostitution severity presented by Decriminalize Sex Work could be out of date as some state laws are currently in flux. For example, as written on their “Oregon” report, DSW mentions “Oregon prostitution laws are currently in committee and may be receiving a full overhaul” (“Oregon Prostitution Laws,” DSW). However, there is no date attached to this note, and the statistics DSW links to for the summary of prostitution penalties has last been reviewed in 2016 (“Oregon Prostitution and Solicitation Laws,” Find Law, 2016). 
+
+Additionally, state strictness surrounding prostitution and the definitions for felony and misdemeanor offenses are defined differently by some states, which made it a labor-intensive task to determine an accurate estimate of the level of “strictness” and escalation to felonies. Besides Oklahoma, we defined the level of strictness based on the fact that these states will sometimes consider prostitution to be a felony. The states also use different criteria when considering if the prostitution case should be considered a felony. Furthermore, the rate at which the cases are punished as felonies is also not considered in our grouping, which could mean that not all “strict” states are equally strict. Nevertheless, such categorization was necessary for the t-test computation. If states did not specify their punishment for prostitution, such as length of imprisonment and the value of the fine, we referenced federal classifications to fill in the missing data and manually charted each state’s legal position on criminalizing prostitution to note any irregularities across states' class offense definitions (see “States” for a further breakdown).   
+
+Lastly, the prostitution data was largely unclear on whether some offenses were successfully charged or if the defendant was acquitted. This dataset was extracted from the FBI Crime Data Explorer, a national data resource that aims to provide transparency and promote access to crime statistics across the United States. In other words, we only were able to view the number of offenses pre-trial, before any final convictions were dealt as this precise information was not accessible online. As such, we encountered difficulties in measuring the precise number of offenses that an arrestee was successfully convicted for. Additionally, some states had very low prostitution offenses for a five year span, so we had to dismiss sex as a significant factor for these locations.
+
+## Conclusion
+
+### Project Importance
+
+Overall, our project looked at 1) state incarceration rates—including combining the states into regions—deviating from the trend of only measuring federal incarceration rates, 2) observed incarceration rates by sex in each state/region, and 3) evaluated each state’s policies on prostitution laws to see whether the strictness of states’ prostitution laws could be correlated to disproportionately high incarceration rates among females compared to males. The importance of this project relies on how incarceration numbers can drastically vary from state to state/region to region, which is hidden when observing federal rates that cumulate state incarceration numbers together. 
+
+This project looks at the total number of people incarcerated in each state, the total number of people incarcerated per 100,000 people in each state’s population, and the number of females/males incarcerated in each state/region per 100,000 people. On a regional level, this project looks at the total number of people incarcerated in each region, the number of people incarcerated per 100,000 in population for each region, the number of females incarcerated per 100,000 in population in each region, the number of females incarcerated per 100,000 in population in each region, and the number of males incarcerated per 100,000 in population in each region. Moreover, we also included spatial graphs. The spatial graphs look at the number of females incarcerated per 100,000 people in each state and another spatial graph observes how the number of females incarcerated per 100,000 people to the number of males incarcerated per 100,000 people. By observing the incarceration numbers for every 100,000 people and total incarceration numbers, these data visualizations help us better understand state and regional-level incarceration numbers and how states/regions differ by sex in incarcerating people. 
+
+This project also takes into consideration how sex can be a social stratifier within state/region incarceration rates, especially given that women are being incarcerated at higher rates over the past several decades (Sentencing Project 2025). This project finds that western states (e.g., Idaho, Montana, Wyoming) and southern states (e.g. Texas, Florida) have disproportionately high total incarceration numbers and number of females incarcerated per 100,000 people in the state. This may indicate that southern and western states may have a more punitive approach to policies that influence their incarceration numbers. We encourage more research to be done in this space and to further interrogate why states/the South and West region appear to have higher incarceration numbers compared to the rest of the country. 
+
+### Results 
+
+### *Incarceration Numbers Per 100,000 and Total Incarceration Numbers*
+
+When we looked at total people incarcerated per state, Texas had the highest number of people incarcerated, California second, Florida third, and Georgia 4th. Out of the top 4 states with the highest number of incarceration, three of the states (Texas, Georgia, and Florida) are from the South. On the other hand, the states with the lowest number of incarcerated people were Vermont, Rhode Island, Alaska, and Maine. Out of the top 4 states with lowest numbers of incarcerated people, three of the states are from the Northeast (Vermont, Maine, and Rhode Island). 
+
+However, it is important to consider how population size plays a critical role in this—the larger the state population, the more people who may be incarcerated, even if the incarceration rate is actually lower compared to a smaller population-sized state. Thus, when measuring the number of incarcerated people in each state per 100,000 people, the top 4 states change, which may be surprising. Mississippi has the higher number of people incarcerated per 100,000 people in the state, Louisiana second, Arkansas third, and Oklahoma fourth. All of these four states are from the South. When looking at the four states with the lowest number of people incarcerated per 100,000 people, Massachusetts has the lowest, Maine the second lowest, Rhode Island the third lowest, and Vermont the fourth lowest. All of these states are from the Northeast. 
+
+This data analysis points to how the South has more incarcerated people than other regions, while the Northeast region has less incarcerated people than other regions. It may be surprising that states’ level of incarceration changes when population size is taken into consideration. Yet, even though the specific states with the highest/lowest incarceration numbers may change when viewing the flat total incarcerated vs. total incarcerated per 100,000 people in the population, the states’ regions stay quite similar. Accordingly, when we measured the region incarceration numbers, the South had the highest incarceration numbers when viewing the data results by 100,000 people in each region and total incarceration numbers per region. The Northeast also remained about the lowest in incarceration measures in both results as well. There may be certain policies and normalized behaviors from law enforcement in the South that lead to these disproportionately high incarceration numbers compared to other regions/states. 
+
+Next, when looking at how incarceration by sex may differ by state, Idaho, Montana, South Dakota, and Oklahoma were some states that incarcerated the most females per 100,000 people in each state. There is variance in regions: Idaho and Montana are from the West, South Dakota from the Midwest, and Oklahoma is from the South. Massachusetts, New Jersey, Vermont, and New York were some states that incarcerated the least females per 100,00 people in each state. All four states are from the Northeast. The regional data also shows that the South has the most females incarcerated when looking at every 100,000 people and by total population across regions, and the Northeast has the lowest number of females incarcerated when looking at both incarceration numbers for every 100,000 people and by total population across regions (when not accounting for Hawaii and Alaska because as mentioned earlier, those two states do not belong to regions). Once again, the South has disproportionately high numbers of females incarcerated. 
+
+To combine data analysis and policy relevance, this project outlines each state’s prostitution laws since females have disproportionately higher rates of arrest on prostitution charges than males. We highlight this policy to identify whether it may be correlated to sex discrimination in incarceration. Through the use of a t-test, this project identifies that stricter prostitution laws are statistically insignificant in explaining the heightened incarceration rates of females. When looking at states with the strictest prostitution laws (including Texas, South Carolina, Oklahoma, and more), they did not all have disproportionately higher incarceration numbers of females per 100,000 people. Although prostitution laws disproportionately affect females in regards to their criminal legal system contact, this does not necessarily lead to higher incarceration numbers among females. This means that there may be other laws, policies, as well as police bias, that can lead to unequal criminal legal system contact among females in different states.  
+
+### Next Steps and Future Directions
+
+We conclude by stating that more research needs to be done to understand how policies shape incarceration numbers. This project points to why there should be a sustained focus on looking at state and regional differences within incarceration rates. The U.S. is considered to have exceptionally high incarceration rates, but the data shows that Southern states are incarcerating people at much higher rates than the Northeast when looking at both total incarceration numbers per region and incarceration numbers per 100,000 people in the region. Generalizing U.S. incarceration rates under a national total can guise how some states are disproportionately contributing to the total incarceration numbers. If we are to reduce total incarceration numbers, this project highlights what states may need to focus on reform the most (i.e., the states with the highest incarceration numbers). 
+
+This project contributes to understandings that emphasize how local states/regions are contributing disproportionately to the high incarceration rates in the country, pointing to the importance of further evaluating local and state policies (Vera Institute of Justice 2026). The South is also incarcerating females at a disproportionately high rate compared to other regions. Future research can seek to more closely understand why—what is public opinion in the South towards criminal legal system punishment? How might political ideology (conservative vs. liberal ideals) shape opinions and policies within these states? How are law enforcement officers being trained in the South compared to the Northeast in ways that might lead to higher arrests and incarceration? All of these are future directions and next steps that this project can go in to better understand regional/state differences in national incarceration numbers. 
+
+Although stricter prostitution laws (which are laws that disproportionately apply to the female sex) were found to be statistically insignificant in explaining the differences in the numbers of females incarcerated in states, this does not mean that prostitution laws have no significance on individuals' lived experiences. Thus, we encourage qualitative research that employs interviews and ethnographic fieldnotes to understand how strict prostitution laws are shaping peoples’ lives. Moreover, there may be other mechanisms that we did not explore in this project that can explain the disproportionately high female incarceration numbers in the South. Is there higher policing in some states? How much discretion do court officials have in such laws being applied? All of these questions are directions that this research can go in to help better understand female incarceration numbers. 
+
+## Group Contributions
+
+### Ava
+
+* Completed some of the data preprocessing (creating new columns for region calculations (e.g., female, male, total/100,000) as well as state calculations, added tidycensus to the data, created dataframe and columns for strict v not strict states, created data frame for # of female/# of male ratio for each state)
+* Created stacked barcharts 
+* Created spatial maps
+* Completed t-test
+* Proofread code and made changes as fit
+* Wrote the method section alongside Christine 
+* Created and presented method slides alongside Christine
+* We all contributed to proofreading the report and finding the BJS dataset
+* Went to office hours to debug w/ Christine 
+* Attended all team meetings
+* Worked to complete the final report and knit pdf
+
+### Alex
+
+* Wrote initial code to create bar chart that represented incarceration rates by state
+  - Involved setting up the code that would mutate state names and removing unnecessary data
+* Manually went through FBI Crime Data Explorer to extract # of prostitution charges for all 50 states in the past 5 years 
+* Read through almost all state’s policy and legal codes on prostitution via DSW website to identify the punishment for each individual state
+  - Identified what different charge types entailed (e.g. second degree misdemeanor in Florida)
+  - Analyzed this data to identify and label stricter states 
+* Wrote the introduction section of paper 
+  - Included reading through the media, pulling from previous coursework in SOC 180A, gathering facts/statistics, and doing a literature review (reading studies)
+* Left comments, edits, and clarifications on all sections of the paper and incorporated feedback from Christine into the introduction
+* Presented motivations section of presentation and explained one data source slide
+  - Included creating a script  
+* Created slides within the motivation section of the slide deck (some got cut day of presentation) 
+
+### Christine
+
+* Helped edit the initial BJS dataset with Ava
+* Went to OH with Ava to ask questions on debugging code/on the project
+* Attended all group meetings to discuss project 
+* Wrote code in R to divide states into regions (e.g., using mutate(), case_match(), sum(), ggplot)
+  - Developed chart that measured incarceration rates by region
+* Wrote intro with Alex
+- Pulled most class sources, pulled external sources 
+- Clarified research questions 
+* Wrote conclusion
+  - Evaluated all results from data (identifying states and regions on incarceration numbers)
+  - Developed recommendations and directions for future research
+* Helped find sources to project 
+* Wrote method section with Ava 
+* Reviewed the code (e.g., catch errors, make titles more clear)
+* Created the slides with Ava for class presentation 
+* Reviewed the report, provided feedback, incorporated feedback (e.g.,made our intro connection to class reading; make language in the report clearer) 
+* Presented on barplots and conclusion + future directions for research during class presentation
+* Provided feedback during presentation practice (i.e. language, same page on findings)
+
+### Luci
+
+* Wrote the data and limitations section + incorporated feedback/revisions
+* Assisted with data collection for prostitution policy for below states + sourced information for the misdemeanor class key: Michigan, Minnesota, Mississippi, Missouri, Montana, Nebraska, New Hampshire, New Jersey, New Mexico, New York, North Carolina, Ohio, Oklahoma, Oregon, Pennsylvania, and Rhode Island
+* Presented data and limitations slides for class presentations
+  - Detailing relevance, sources, etc. 
+* Cross-checked and compiled all sources for “References” section
+
+## References
+
+18 U.S. Code § 3559 - Sentencing classification of offenses. (2019). LII / Legal Information Institute. https://www.law.cornell.edu/uscode/text/18/3559
+
+Alexander, M. (2010). The New Jim Crow.
+
+Brown, E. N. (2025, March 26). These States Are Moving in the Wrong Direction on Prostitution Laws. Yahoo News. https://www.yahoo.com/news/states-moving-wrong-direction-prostitution-154553786.html
+
+Budd, K. (2024, July 24). Incarcerated Women and Girls. The Sentencing Project. https://www.sentencingproject.org/fact-sheet/incarcerated-women-and-girls/
+
+Bureau of Justice Statistics. (n.d.). About BJS. Bureau of Justice Statistics. https://bjs.ojp.gov/about
+
+Carson, E. A., & Kluckow, R. (2023, November 30). Prisoners in 2022 – Statistical Tables. Bureau of Justice Statistics. https://bjs.ojp.gov/library/publications/prisoners-2022-statistical-tables
+
+Comfort, M. (2008). Doing Time Together. University of Chicago Press.
+
+Council on Criminal Justice. (2024, July 9). Women’s Justice: A Preliminary Assessment of Women in the Criminal Justice System - Council on Criminal Justice. Council on Criminal Justice. https://counciloncj.org/womens-justice-a-preliminary-assessment-of-women-in-the-criminal-justice-system/
+
+Cullen, J. (2018, July 20). The History of Mass Incarceration. Brennan Center for Justice. https://www.brennancenter.org/our-work/analysis-opinion/history-mass-incarceration
+
+Decriminalize Sex Work. (n.d.). Decriminalize Sex Work. https://decriminalizesex.work/
+
+Edward, W., Battle-Baptiste, W., & Rusert, B. (2018). W. E. B. Du Bois’s data portraits : visualizing Black America : the color line at the turn of the twentieth century. The W.E.B. Du Bois Center At The University Of Massachusetts Amherst ; Hudson. (In class reading)
+
+Enos, S. (2026). Mass Incarceration: Triple Jeopardy for Women in a “Color-Blind” and Gender-Neutral Justice System. Digital Commons @ Salve Regina. https://digitalcommons.salve.edu/jift/vol6/iss1/2/
+
+FBI. (2025, January 15). Federal Bureau of Investigation Crime Data Explorer. Cjis.gov; Federal Bureau of Investigation. https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/explorer/crime/crime-trend
+
+Incarceration Trends | Vera Institute of Justice. (2024, October 31). Trends.vera.org. https://trends.vera.org/
+
+Kajstura, A., & Sawyer, W. (2024, March 5). Women’s mass incarceration: The whole pie 2024. Prison Policy Initiative. https://www.prisonpolicy.org/reports/pie2024women.html
+
+Kim, S. J., & Peterson, C. (2020). The health effects of gendered and devalued work: health outcomes of incarcerated women engaging in sex work and care/service work. Health & Justice, 8(1). https://doi.org/10.1186/s40352-020-00124-4
+
+Maine Prostitution and Solicitation Laws. (2016, April 11). FindLaw. https://www.findlaw.com/state/maine-law/maine-prostitution-and-solicitation-laws.html
+
+Nellis, A. (2024, May 21). Mass Incarceration Trends. The Sentencing Project. https://www.sentencingproject.org/reports/mass-incarceration-trends/
+
+Oregon Prostitution and Solicitation Laws. (2016, April 11). FindLaw. https://www.findlaw.com/state/oregon-law/oregon-prostitution-and-solicitation-laws.html
+
+Prison Policy Initiative, & Sawyer, W. (2026). Mass Incarceration: The Whole Pie 2026. Prisonpolicy.org. https://www.prisonpolicy.org/reports/pie2026.html
+
+Snow, J. (2026). Map Viewer - Cholera Outbreak Map . Arcgis.com. https://www.arcgis.com/apps/mapviewer/index.html?webmap=16a719ed81524ef2ad86b57f6918712f (In-class reading)
+
+Stemen, D. (2017). The Prison Paradox: More Incarceration Will Not Make Us Safer. https://vera-institute.files.svdcdn.com/production/downloads/publications/for-the-record-prison-paradox_02.pdf
+
+BJS Table 42. (2017). FBI. https://ucr.fbi.gov/crime-in-the-u.s/2017/crime-in-the-u.s.-2017/topic-pages/tables/table-42
+US Census Bureau. (2017, October 24). U.S. Census Bureau at a Glance. The United States Census Bureau. https://www.census.gov/about/what/census-at-a-glance.html
+
+## Appendix 
+
+```{r print out all tables of data, echo = T, message=F, warning=F}
+
+library(RCurl)
+library(readr)
+
+pros_url <- getURL("https://raw.githubusercontent.com/avaelisa/Final-Project-SOC10-avaluci/refs/heads/main/StrictnessProstitutionData.csv")
+
+# download prostitution data that we made (from github)
+prosdata <- read_csv(pros_url)
+
+print(prosdata) #prostitution data that we made 
+
+url <- getURL("https://raw.githubusercontent.com/avaelisa/soc10finalproject-alex-christine-ava-luci/refs/heads/main/soc10-dataset")
+
+# download incarceration data from the BJS (from github)
+data <- read_csv(url)
+
+print(data) #uncleaned data downloaded from the BJS
+
+```
+
+## Table of Contents
+
+* <a href="index.html">Index</a>
+* <a href="Introduction.html">Introduction</a>
+* <a href="DataSources.html">Data Sources</a> 
+* <a href="DataProcessingandMethods.html">Data Processing and Methods</a>
+* <a href="Limitations.html">Limitations</a> 
+* <a href="Conclusion.html">Conclusion</a> 
+* <a href="ContributionsReferencesAppendix.html">Contributions, References, and Appendix</a> 
+* <a href="CompleteReport.html">Complete Report</a> 
